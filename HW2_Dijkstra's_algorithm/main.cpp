@@ -18,6 +18,7 @@
 #include <ctime>
 #include <vector>
 #include "Graph.h"
+#include "PriorityQueue.h"
 using namespace std;
 
 /// \brief  Main function.
@@ -51,12 +52,35 @@ int main(int argc, char *argv[])
     cout << "Size null: " << null_graph.node_cnt() << endl;
     cout << "Size my: "   << my_graph.node_cnt() << endl;
     
-    null_graph.randomize(50, 0.2);    
+    null_graph.randomize(5, 0.5);    
     cout << null_graph;
+
+    PriorityQueue queue;    
+    path_data new_path;
+    new_path.cost = 20.0;
+    new_path.dest = 6;
+    new_path.path = {5, 3, 0};
+    queue.insert(new_path);       
+    new_path.cost = 14.0;
+    new_path.dest = 6;
+    new_path.path = {5, 2, 0};
+    queue.insert(new_path);    
+    new_path.cost = 17.0;
+    new_path.dest = 6;
+    new_path.path = {4, 1, 0};
+    queue.insert(new_path);
+    new_path.cost = 10.0;
+    new_path.dest = 6;
+    new_path.path = {4, 2, 0};
+    queue.insert(new_path);
+    
+    cout << queue;
+    
+    
     
     cout << fixed << setprecision(3); 
     
-    int times = 100;
+    int times = 1;
     int n_edges = 0;
     for (int i = 0; i < times; ++i)
     {
