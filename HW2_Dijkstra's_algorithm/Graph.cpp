@@ -8,8 +8,6 @@
 ///
 ////////////////////////////////////////////////////////////////////////////////
 
-
-#include <iostream>
 #include <iomanip>
 #include <assert.h>
 #include "Graph.h"
@@ -137,6 +135,17 @@ void Graph::set_edge_value (node x, node y, float cost)
     this->set_edge_value_uni(y, x, cost);
 }
 
+// Clear all graph structure
+void Graph::destroy()
+{
+    int n_nodes = this->node_cnt();
+    if (n_nodes == 0) return;
+    for (int i = 0; i < n_nodes; ++i)
+        nodes[i].edges.clear();
+    nodes.clear();
+}
+
+
 ostream& operator<<(ostream& out, const Graph& data)
 {
     if (data.nodes.size() == 0)
@@ -161,17 +170,6 @@ ostream& operator<<(ostream& out, const Graph& data)
     out.flags(flags);  // Set the output flags to the way they were
     return out;
 }
-
-// Clear all graph structure
-void Graph::destroy()
-{
-    int n_nodes = this->node_cnt();
-    if (n_nodes == 0) return;
-    for (int i = 0; i < n_nodes; ++i)
-        nodes[i].edges.clear();
-    nodes.clear();
-}
-
 
 //-----------------
 // Private methods

@@ -17,18 +17,18 @@ using namespace std;
 #define	GRAPH_H
 
 
-typedef unsigned int node;   // Node index type
+typedef unsigned int node;      // Node index type
 
 // Edge data structure
 struct edge_data {
-    node dest_node;     // Edge´s destination node
-    float cost;        // Edge´s cost
+    node dest_node;             // Edge´s destination node
+    float cost;                 // Edge´s cost
 };
 
 // Node data structure
 struct node_data {
-    vector<edge_data> edges;      // Edge list to node's neighbours
-    float value;                  // Node value
+    vector<edge_data> edges;    // Edge list to node's neighbours
+    float value;                // Node value
 };
 
 typedef vector<node_data>::iterator node_iterator;
