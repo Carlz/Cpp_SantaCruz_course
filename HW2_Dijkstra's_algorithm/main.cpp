@@ -12,8 +12,10 @@
 ///
 ////////////////////////////////////////////////////////////////////////////////
 
-#include <cstdlib>
 #include <iostream>
+#include <iomanip>
+#include <cstdlib>
+#include <ctime>
 #include <vector>
 #include "Graph.h"
 using namespace std;
@@ -28,6 +30,8 @@ int main(int argc, char *argv[])
     Graph null_graph;
     Graph my_graph(10);
     
+    srand(clock());
+    
 //    null_graph.add_edge(0,1,1);
     my_graph.add_edge(0,1,1);
     my_graph.add_edge(2,3,1);
@@ -40,6 +44,25 @@ int main(int argc, char *argv[])
     
     cout << "Number of Edges (null_graph): " << null_graph.edge_cnt() << endl;
     cout << "Number of Edges (my_graph): " << my_graph.edge_cnt() << endl;
-
+    
+    cout << null_graph;
+    cout << my_graph;
+    
+    cout << "Size null: " << null_graph.node_cnt() << endl;
+    cout << "Size my: "   << my_graph.node_cnt() << endl;
+    
+    null_graph.randomize(50, 0.2);    
+    cout << null_graph;
+    
+    cout << fixed << setprecision(3); 
+    
+    int times = 100;
+    int n_edges = 0;
+    for (int i = 0; i < times; ++i)
+    {
+        null_graph.randomize(50, 0.2);
+        n_edges += null_graph.edge_cnt();
+    }
+    cout << "Edges mean: " << static_cast<float>(n_edges)/static_cast<float>(times) << endl;
     return 0;
 }

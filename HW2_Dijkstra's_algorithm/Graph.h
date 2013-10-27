@@ -8,47 +8,61 @@
 ///
 ////////////////////////////////////////////////////////////////////////////////
 
+#include <iostream>
+#include <cstdlib>
 #include <vector>
 using namespace std;
 
 #ifndef GRAPH_H
 #define	GRAPH_H
 
+
+typedef unsigned int node;   // Node index type
+
 // Edge data structure
 struct edge_data {
-    int dest_node;     // Edge´s destination node
-    int cost;          // Edge´s cost
+    node dest_node;     // Edge´s destination node
+    float cost;        // Edge´s cost
 };
 
 // Node data structure
 struct node_data {
     vector<edge_data> edges;      // Edge list to node's neighbours
-    int value;                    // Node value
+    float value;                  // Node value
 };
 
-typedef int node;   // Node index type
+typedef vector<node_data>::iterator node_iterator;
+typedef vector<edge_data>::iterator edge_iterator;
+
+
+const float COST_LOW    = 1.0;
+const float COST_HIGH   = 10.0;
 
 
 class Graph {
 public:
-            Graph() {}                      // Trivial constructor.
-            Graph(int node_number) { nodes.resize(node_number);} // Initialize Graph with n nodes.
-    int     node_cnt() { return nodes.size();} // Returns the number of nodes in the graph.
-    int     edge_cnt();                     // Returns the number of edges in the graph.
-    bool    adjacent(node x, node y);       // Tests whether there is an edge from node x to node y.
-    vector<node> neighbours(node x);        // Lists all nodes y such that there is an edge from x to y.
-    void    add_edge(node x, node y, int cost); // Adds the edge from x to y with cost, if it is not there.
+            Graph(int nd_cnt = 0) { if (nd_cnt > 0) nodes.resize(nd_cnt);} // Initialize Graph with n nodes.
+    void    randomize(unsigned int nd_cnt = 0, float density = 0); // Generate a random graph structure base on node count and edge density
+    int     node_cnt() const { return nodes.size();}      // Returns the number of nodes in the graph.
+    int     edge_cnt() const;               // Returns the number of edges in the graph.
+    bool    adjacent(node x, node y) const ;  // Tests whether there is an edge from node x to node y.
+    vector<node> neighbours(node x) const;        // Lists all nodes y such that there is an edge from x to y.
+    void    add_edge(node x, node y, float cost); // Adds the edge from x to y with cost, if it is not there.
     void    delete_edge(node x, node y);    // Removes the edge from x to y, if it is there.
-    int     get_node_value(node x);         // Returns the value associated with the node x.
-    void    set_node_value(node x, int val);// Sets the value associated with the node x.
-    int     get_edge_value(node x, node y); // Returns the value associated to the edge (x,y).
-    void    set_edge_value (node x, node y, int cost); //Sets the cost associated to the edge (x,y).
+    float   get_node_value(node x) const;         // Returns the value associated with the node x.
+    void    set_node_value(node x, float val);// Sets the value associated with the node x.
+    float   get_edge_value(node x, node y) const; // Returns the value associated to the edge (x,y).
+    void    set_edge_value (node x, node y, float cost); //Sets the cost associated to the edge (x,y).
+    void    destroy();                      // Clear all graph structure
+    friend ostream& operator<<(ostream& out, const Graph& data); // Prints Graph structure on the screen
+
 
 private:
     vector<node_data> nodes;                // Graph's nodes list.
     void    delete_edge_uni(node x, node y);
-    void    set_edge_value_uni(node x, node y, int cost);
-
+    void    set_edge_value_uni(node x, node y, float cost);
+    void    add_random_edge(node src, node dst, float density);
+    inline float random_cost() const;
 };
 
 #endif	/* GRAPH_H */

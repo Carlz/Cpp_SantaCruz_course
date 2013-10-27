@@ -10,7 +10,7 @@
 
 
 #include <iostream>
-
+#include <iomanip>
 #include <assert.h>
 #include "Graph.h"
 
@@ -18,10 +18,21 @@
 // Public methods
 //-----------------
 
+// Generate a random graph structure base on node count and edge density
+void Graph::randomize(unsigned int nd_cnt, float density)
+{
+    this->destroy();
+    if (nd_cnt == 0) return;
+    nodes.resize(nd_cnt);
+    if (density <= 0) return;
+    for (node src = 0; src < nd_cnt; ++src)
+       for (node dst = src + 1; dst < nd_cnt; ++dst)
+           this->add_random_edge(src, dst, density);
+}
 
 /// \brief  Returns the number of edges in the graph.
 /// \return Number of edges
-int Graph::edge_cnt()
+int Graph::edge_cnt() const
 {
     int n_edges = 0;
     for (int i = 0; i < nodes.size(); ++i )
@@ -31,7 +42,7 @@ int Graph::edge_cnt()
 
 // Tests whether there is an edge from node x to node y.
 // Assuming that is undirected graph
-bool Graph::adjacent(node x, node y)
+bool Graph::adjacent(node x, node y) const
 {
     assert(x < nodes.size());
 
@@ -44,7 +55,7 @@ bool Graph::adjacent(node x, node y)
 }
 
 // Lists all nodes y such that there is an edge from x to y.
-vector<node> Graph::neighbours(node x)
+vector<node> Graph::neighbours(node x) const
 {
     assert(x < nodes.size());
     vector<node> nb_list;       // Neighbours list
@@ -57,7 +68,7 @@ vector<node> Graph::neighbours(node x)
 
 // Adds the edge from x to y, if it is not there.
 // Assuming that is undirected graph
-void Graph::add_edge(node x, node y, int cost = 0)
+void Graph::add_edge(node x, node y, float cost = 0.0)
 {
     assert(cost >= 0);
     
@@ -89,14 +100,14 @@ void Graph::delete_edge(node x, node y)
 }
 
 // Returns the value associated with the node x.
-int Graph::get_node_value(node x)
+float Graph::get_node_value(node x) const
 {
     assert(x < nodes.size());
     return nodes[x].value;
 }
 
 // Sets the value associated with the node x.
-void Graph::set_node_value(node x, int val)
+void Graph::set_node_value(node x, float val)
 {
     assert(x < nodes.size() && val >= 0);
     nodes[x].value = val;
@@ -104,24 +115,59 @@ void Graph::set_node_value(node x, int val)
 
 // Returns the value associated to the edge (x,y).
 // -1 does not exist
-int Graph::get_edge_value(node x, node y)
+float Graph::get_edge_value(node x, node y) const
 {
     assert(x < nodes.size());
     
     for (int i = 0; i < nodes[x].edges.size(); ++i)
         if (nodes[x].edges[i].dest_node == y)
             return nodes[x].edges[i].cost;
-    //
-    return -1;
+    // If edge does not exist, return a negative number
+    return -1.0;
 }
 
-//Sets the value associated to the edge (x,y) to v.    
-void Graph::set_edge_value (node x, node y, int cost)
+//Sets the value associated to the edge (x,y) to cost.    
+void Graph::set_edge_value (node x, node y, float cost)
 {
-    assert(x < nodes.size() && y < nodes.size());
+    assert(x < nodes.size() && y < nodes.size() && cost >= 0);
 
     this->set_edge_value_uni(x, y, cost);
     this->set_edge_value_uni(y, x, cost);
+}
+
+ostream& operator<<(ostream& out, const Graph& data)
+{
+    if (data.nodes.size() == 0)
+        return (out << "Empty graph!" << endl);
+    
+    ios_base::fmtflags flags = out.flags( );    // Save old output stream flags
+    out << fixed << setprecision(2);            // Configure floating point display
+
+    out << "Number of nodes: " << data.node_cnt() << endl;
+    out << "Number of edges: " << data.edge_cnt() << endl;
+    out << "Source\tDestination(cost)" << endl;
+    for (node src = 0; src < data.nodes.size(); ++src)
+    {
+        out << src << "\t";
+        for (int dst = 0; dst < data.nodes[src].edges.size(); ++dst)
+        {
+            out << data.nodes[src].edges[dst].dest_node << "(";
+            out << data.nodes[src].edges[dst].cost << ") ";
+        }
+        out << endl;
+    }
+    out.flags(flags);  // Set the output flags to the way they were
+    return out;
+}
+
+// Clear all graph structure
+void Graph::destroy()
+{
+    int n_nodes = this->node_cnt();
+    if (n_nodes == 0) return;
+    for (int i = 0; i < n_nodes; ++i)
+        nodes[i].edges.clear();
+    nodes.clear();
 }
 
 
@@ -132,20 +178,31 @@ void Graph::set_edge_value (node x, node y, int cost)
 void Graph::delete_edge_uni(node x, node y)
 {
     vector<edge_data>* node_edges = &(nodes[x].edges);
-    for (vector<edge_data>::iterator it = node_edges->begin(); it != node_edges->end(); ++it )
-    {
+    for (edge_iterator it = node_edges->begin(); it != node_edges->end(); ++it )
         if (it->dest_node == y)
         {
             node_edges->erase(it);
             break;
         }
-    }        
 }
 
-//Sets the value associated to the edge (x,y) to v.    
-void Graph::set_edge_value_uni(node x, node y, int cost)
+//Sets the value associated to the edge (x,y) to cost.    
+void Graph::set_edge_value_uni(node x, node y, float cost)
 {
     for (int i = 0; i < nodes[x].edges.size(); ++i)
         if (nodes[x].edges[i].dest_node == y)
             nodes[x].edges[i].cost = cost;
+}
+
+inline float Graph::random_cost() const
+{
+    return COST_LOW + static_cast<float>(rand())/(static_cast<float>(RAND_MAX)/(COST_HIGH-COST_LOW));
+}
+
+//
+void Graph::add_random_edge(node src, node dst, float density)
+{
+    float prob = static_cast<float>(rand())/static_cast<float>(RAND_MAX);
+    if (prob < density)
+        this->add_edge(src, dst, this->random_cost());
 }
