@@ -18,16 +18,18 @@
 // Public methods
 //-----------------
 
-// Generate a random graph structure base on node count and edge density
+/// \brief  Generate a random graph structure base on node count and edge density
+/// \param  nd_cnt      Node count: number of nodes in the Graph
+/// \param  density     Graph edges density: values range from 0.0 to 1.0
 void Graph::randomize(unsigned int nd_cnt, float density)
 {
-    this->destroy();
-    if (nd_cnt == 0) return;
-    nodes.resize(nd_cnt);
-    if (density <= 0) return;
-    for (node src = 0; src < nd_cnt; ++src)
-       for (node dst = src + 1; dst < nd_cnt; ++dst)
-           this->add_random_edge(src, dst, density);
+    this->destroy();                                    // clear previous Graph data
+    if (nd_cnt == 0) return;                            // stop if empty Graph was defined
+    nodes.resize(nd_cnt);                               // else create requested number of nodes
+    if (density <= 0) return;                           // stop if zero density Graph was defined
+    for (node src = 0; src < nd_cnt; ++src)             // else iterate over possible edges
+       for (node dst = src + 1; dst < nd_cnt; ++dst)    // and add them randomly
+           this->add_random_edge(src, dst, density);    // based on the requested density
 }
 
 /// \brief  Returns the number of edges in the graph.
