@@ -19,15 +19,15 @@
 /// \brief  Generate a random graph structure base on node count and edge density
 /// \param  nd_cnt      Node count: number of nodes in the Graph
 /// \param  density     Graph edges density: values range from 0.0 to 1.0
-void Graph::randomize(unsigned int nd_cnt, float density)
+void Graph::randomize(unsigned int nd_cnt, float density, float cost_low, float cost_high)
 {
     this->destroy();                                    // clear previous Graph data
     if (nd_cnt == 0) return;                            // stop if empty Graph was defined
     nodes.resize(nd_cnt);                               // else create requested number of nodes
     if (density <= 0) return;                           // stop if zero density Graph was defined
     for (node src = 0; src < nd_cnt; ++src)             // else iterate over possible edges
-       for (node dst = src + 1; dst < nd_cnt; ++dst)    // and add them randomly
-           this->add_random_edge(src, dst, density);    // based on the requested density
+       for (node dst = src + 1; dst < nd_cnt; ++dst)    // and add them randomly based on requested
+           this->add_random_edge(src, dst, density, cost_low, cost_high); // density and cost range
 }
 
 /// \brief  Returns the number of edges in the graph.
@@ -58,10 +58,10 @@ bool Graph::adjacent(node x, node y) const
 vector<node> Graph::neighbours(node x) const
 {
     assert(x < nodes.size());
-    vector<node> nb_list;       // Neighbours list
+    vector<node> nb_list = {};       // Neighbours list
     if (x >= nodes.size())
         return nb_list;    
-    for (int i = 0; nodes[x].edges.size(); ++i)
+    for (int i = 0; i < nodes[x].edges.size(); ++i)
         nb_list.push_back(nodes[x].edges[i].dest_node);
     return nb_list;
 }
@@ -194,15 +194,15 @@ void Graph::set_edge_value_uni(node x, node y, float cost)
             nodes[x].edges[i].cost = cost;
 }
 
-inline float Graph::random_cost() const
+inline float Graph::random_cost(float low, float high) const
 {
-    return COST_LOW + static_cast<float>(rand())/(static_cast<float>(RAND_MAX)/(COST_HIGH-COST_LOW));
+    return low + static_cast<float>(rand())/(static_cast<float>(RAND_MAX)/(high-low));
 }
 
-//
-void Graph::add_random_edge(node src, node dst, float density)
+/// \brief  Test
+void Graph::add_random_edge(node src, node dst, float density, float cost_low, float cost_high)
 {
     float prob = static_cast<float>(rand())/static_cast<float>(RAND_MAX);
     if (prob < density)
-        this->add_edge(src, dst, this->random_cost());
+        this->add_edge(src, dst, this->random_cost(cost_low, cost_high));
 }
