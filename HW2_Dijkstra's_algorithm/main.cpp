@@ -19,6 +19,7 @@
 #include <vector>
 #include "Graph.h"
 #include "PriorityQueue.h"
+#include "ShortestPath.h"
 using namespace std;
 
 /// \brief  Main function.
@@ -51,28 +52,33 @@ int main(int argc, char *argv[])
     
     cout << "Size null: " << null_graph.node_cnt() << endl;
     cout << "Size my: "   << my_graph.node_cnt() << endl;
-    
+
+    cout << "=============" << endl;
     null_graph.randomize(5, 0.5);    
     cout << null_graph;
 
+    ShortestPath djikstra;
+    djikstra.find_path(null_graph, 0, 4);
+    
+    cout << "=============" << endl;
+    
     PriorityQueue queue;    
-    path_data new_path;
-    new_path.cost = 20.0;
-    new_path.dest = 6;
-    new_path.path = {5, 3, 0};
+    Path new_path({5, 3, 0}, 20.0);
+//    new_path.cost = 20.0;
+//    new_path.path = {5, 3, 0};
     queue.insert(new_path);       
-    new_path.cost = 14.0;
-    new_path.dest = 6;
-    new_path.path = {5, 2, 0};
-    queue.insert(new_path);    
-    new_path.cost = 17.0;
-    new_path.dest = 6;
-    new_path.path = {4, 1, 0};
-    queue.insert(new_path);
-    new_path.cost = 10.0;
-    new_path.dest = 6;
-    new_path.path = {4, 2, 0};
-    queue.insert(new_path);
+//    new_path.cost = 14.0;
+//    new_path.dest = 6;
+//    new_path.path = {5, 2, 0};
+//    queue.insert(new_path);    
+//    new_path.cost = 17.0;
+//    new_path.dest = 6;
+//    new_path.path = {4, 1, 0};
+//    queue.insert(new_path);
+//    new_path.cost = 10.0;
+//    new_path.dest = 6;
+//    new_path.path = {4, 2, 0};
+//    queue.insert(new_path);
     
     cout << queue;
     
