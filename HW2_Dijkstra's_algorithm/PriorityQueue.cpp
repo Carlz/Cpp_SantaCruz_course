@@ -9,6 +9,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include <iomanip>
+#include <algorithm>
 #include "PriorityQueue.h"
 
 PriorityQueue::PriorityQueue() {
@@ -21,14 +22,13 @@ PriorityQueue::~PriorityQueue() {
 }
 
 // changes the priority (node value) of queue element.
-void PriorityQueue::chg_prioirity(path_data& new_prio)
+void PriorityQueue::chg_prioirity(Path& new_prio)
 {
     bool updated = false;
     for (int i = 0; i < path_queue.size(); ++i)
-        if (path_queue[i].dest == new_prio.dest)
+        if (path_queue[i].get_dest() == new_prio.get_dest())
         {
-            path_queue[i].cost = new_prio.cost;
-            path_queue[i].path = new_prio.path;
+            path_queue[i] = new_prio;
             updated = true;
         }
     if (updated)
@@ -39,7 +39,7 @@ void PriorityQueue::chg_prioirity(path_data& new_prio)
 // removes the top element of the queue.
 void PriorityQueue::pop_top()
 {
-    pop_heap(path_queue.begin(), path_queue.end(), PathCompare(true)); 
+    std::pop_heap(path_queue.begin(), path_queue.end(), PathCompare(true)); 
     path_queue.pop_back();
 }
 
@@ -47,17 +47,17 @@ void PriorityQueue::pop_top()
 bool PriorityQueue::contains(node dest) const
 {
     for (int i = 0; i < path_queue.size(); ++i)
-        if (path_queue[i].dest == dest)
+        if (path_queue[i].get_dest() == dest)
             return true;
     // If not found return false
     return false;            
 }
 
 // insert queue_element into queue
-void PriorityQueue::insert(path_data& path)
+void PriorityQueue::insert(Path& new_path)
 {
-    path_queue.push_back(path); 
-    push_heap(path_queue.begin(),path_queue.end(), PathCompare(true));
+    path_queue.push_back(new_path); 
+    std::push_heap(path_queue.begin(),path_queue.end(), PathCompare(true));
 }   
 
 
@@ -69,13 +69,15 @@ ostream& operator<<(ostream& out, const PriorityQueue& data)
     ios_base::fmtflags flags = out.flags( );    // Save old output stream flags
     out << fixed << setprecision(2);            // Configure floating point display
 
+    out << "Min Path: " << data.top().get_dest() << " (" << data.top().get_cost() << ")" << endl;
     out << "Number of paths: " << data.size() << endl;
     out << "Cost\tDest\tPath" << endl;
     for (auto it = data.path_queue.begin(); it != data.path_queue.end(); ++it)
     {
-        out << it->cost << "\t" << it->dest << "\t";
-        for (auto path = it->path.begin(); path != it->path.end(); ++path)
-            out << *path << " ";
+        out << it->get_cost() << "\t" << it->get_dest() << "\t";
+        vector<node> node_path = it->get_path();
+        for (int j = 0; j < node_path.size(); ++j)
+            out << node_path[j] << " ";
         out << endl;
     }
     out.flags(flags);  // Set the output flags to the way they were
