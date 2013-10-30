@@ -57,7 +57,7 @@ bool Graph::adjacent(node x, node y) const
 // Lists all nodes y such that there is an edge from x to y.
 vector<node> Graph::neighbours(node x) const
 {
-    assert(x < nodes.size());
+    assert(static_cast<size_t>(x) < nodes.size());
     vector<node> nb_list = {};       // Neighbours list
     if (x >= nodes.size())
         return nb_list;    

@@ -39,7 +39,7 @@ public:
     
     void chg_prioirity(Path& new_prio);   // changes the priority (node value) of queue element.
     void pop_top();                       // removes the top element of the queue.
-    bool contains(node dest) const;       // does the queue contain queue_element.
+    float get_cost(node dest) const;       // does the queue contain queue_element? verify with positive cost.
     void insert(Path& new_path);         // insert queue_element into queue
     Path top() const                 // returns the top element of the queue.
         {return path_queue.front(); }

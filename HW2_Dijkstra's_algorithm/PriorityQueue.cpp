@@ -43,14 +43,14 @@ void PriorityQueue::pop_top()
     path_queue.pop_back();
 }
 
-// does the queue contain queue_element.
-bool PriorityQueue::contains(node dest) const
+// does the queue contain queue_element? verify with positive cost.
+float PriorityQueue::get_cost(node dest) const
 {
     for (int i = 0; i < path_queue.size(); ++i)
         if (path_queue[i].get_dest() == dest)
-            return true;
-    // If not found return false
-    return false;            
+            return path_queue[i].get_cost();
+    // If not found return negative
+    return -1.0;            
 }
 
 // insert queue_element into queue

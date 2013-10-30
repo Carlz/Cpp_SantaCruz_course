@@ -18,7 +18,7 @@ public:
     virtual ~ShortestPath();
     
     vector<node> vertices();                    // list of vertices in G(V,E).
-    vector<node> find_path(Graph& base_graph, node src, node dst);      // find shortest path between u-w and returns the sequence of vertices representing shorest path u-v1-v2-…-vn-w.
+    Path         find_path(Graph& base_graph, node src, node dst);      // find shortest path between u-w and returns the sequence of vertices representing shorest path u-v1-v2-…-vn-w.
     float        path_size(node src, node dst); // return the path cost associated with the shortest path.
 
 private:
