@@ -25,7 +25,7 @@ PriorityQueue::~PriorityQueue() {
 void PriorityQueue::chg_prioirity(Path& new_prio)
 {
     bool updated = false;
-    for (int i = 0; i < path_queue.size(); ++i)
+    for (size_t i = 0; i < path_queue.size(); ++i)
         if (path_queue[i].get_dest() == new_prio.get_dest())
         {
             path_queue[i] = new_prio;
@@ -46,11 +46,10 @@ void PriorityQueue::pop_top()
 // does the queue contain queue_element? verify with positive cost.
 float PriorityQueue::get_cost(node dest) const
 {
-    for (int i = 0; i < path_queue.size(); ++i)
-        if (path_queue[i].get_dest() == dest)
-            return path_queue[i].get_cost();
-    // If not found return negative
-    return -1.0;            
+    if (path_map.find(dest) != path_map.end())      // if Path was found
+        return path_map[dest].get_cost();           // return its cost
+    else                                            // else if not found, return negative
+        return -1.0;            
 }
 
 // insert queue_element into queue
@@ -58,6 +57,7 @@ void PriorityQueue::insert(Path& new_path)
 {
     path_queue.push_back(new_path); 
     std::push_heap(path_queue.begin(),path_queue.end(), PathCompare(true));
+    path_map[new_path.get_dest()] = new_path;
 }   
 
 
@@ -72,11 +72,11 @@ ostream& operator<<(ostream& out, const PriorityQueue& data)
     out << "Min Path: " << data.top().get_dest() << " (" << data.top().get_cost() << ")" << endl;
     out << "Number of paths: " << data.size() << endl;
     out << "Cost\tDest\tPath" << endl;
-    for (auto it = data.path_queue.begin(); it != data.path_queue.end(); ++it)
+    for (vector<Path>::const_iterator it = data.path_queue.begin(); it != data.path_queue.end(); ++it)
     {
         out << it->get_cost() << "\t" << it->get_dest() << "\t";
         vector<node> node_path = it->get_path();
-        for (int j = 0; j < node_path.size(); ++j)
+        for (size_t j = 0; j < node_path.size(); ++j)
             out << node_path[j] << " ";
         out << endl;
     }

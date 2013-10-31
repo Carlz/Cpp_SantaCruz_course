@@ -41,10 +41,12 @@ Path ShortestPath::find_path(Graph& base_graph, node src, node dst)
 
             float open_cost = open_set.get_cost(nb_list[i]);            
             if (close_set.get_cost(nb_list[i]) < 0)                     // if node is not in the close set
+            {
                 if (open_cost < 0)                                      // if node is not in the open set
                     open_set.insert(new_path);                          // ... include its path
                 else if (open_cost > new_path.get_cost())               // else node is in the open set, but with higher cost
                     open_set.chg_prioirity(new_path);                   // ... update node's path and cost
+            }
         }
         if (open_set.size() > 0)
         {

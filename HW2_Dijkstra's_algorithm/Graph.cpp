@@ -35,7 +35,7 @@ void Graph::randomize(unsigned int nd_cnt, float density, float cost_low, float 
 int Graph::edge_cnt() const
 {
     int n_edges = 0;
-    for (int i = 0; i < nodes.size(); ++i )
+    for (size_t i = 0; i < nodes.size(); ++i )
         n_edges += nodes[i].edges.size();
     return n_edges/2;   // undirected graph - edges counted in double
 }
@@ -46,7 +46,7 @@ bool Graph::adjacent(node x, node y) const
 {
     assert(x < nodes.size());
 
-    for (int i = 0; i < nodes[x].edges.size(); ++i)
+    for (size_t i = 0; i < nodes[x].edges.size(); ++i)
     {
         if (nodes[x].edges[i].dest_node == y)
             return true;
@@ -58,10 +58,10 @@ bool Graph::adjacent(node x, node y) const
 vector<node> Graph::neighbours(node x) const
 {
     assert(static_cast<size_t>(x) < nodes.size());
-    vector<node> nb_list = {};       // Neighbours list
-    if (x >= nodes.size())
+    vector<node> nb_list;         // Neighbours list
+    if (static_cast<size_t>(x) >= nodes.size())
         return nb_list;    
-    for (int i = 0; i < nodes[x].edges.size(); ++i)
+    for (size_t i = 0; i < nodes[x].edges.size(); ++i)
         nb_list.push_back(nodes[x].edges[i].dest_node);
     return nb_list;
 }
@@ -119,7 +119,7 @@ float Graph::get_edge_value(node x, node y) const
 {
     assert(x < nodes.size());
     
-    for (int i = 0; i < nodes[x].edges.size(); ++i)
+    for (size_t i = 0; i < nodes[x].edges.size(); ++i)
         if (nodes[x].edges[i].dest_node == y)
             return nodes[x].edges[i].cost;
     // If edge does not exist, return a negative number
@@ -148,7 +148,7 @@ void Graph::destroy()
 
 ostream& operator<<(ostream& out, const Graph& data)
 {
-    if (data.nodes.size() == 0)
+    if (data.node_cnt() == 0)
         return (out << "Empty graph!" << endl);
     
     ios_base::fmtflags flags = out.flags( );    // Save old output stream flags
@@ -160,7 +160,7 @@ ostream& operator<<(ostream& out, const Graph& data)
     for (node src = 0; src < data.nodes.size(); ++src)
     {
         out << src << "\t";
-        for (int dst = 0; dst < data.nodes[src].edges.size(); ++dst)
+        for (size_t dst = 0; dst < data.nodes[src].edges.size(); ++dst)
         {
             out << data.nodes[src].edges[dst].dest_node << "(";
             out << data.nodes[src].edges[dst].cost << ") ";
@@ -189,14 +189,14 @@ void Graph::delete_edge_uni(node x, node y)
 //Sets the value associated to the edge (x,y) to cost.    
 void Graph::set_edge_value_uni(node x, node y, float cost)
 {
-    for (int i = 0; i < nodes[x].edges.size(); ++i)
+    for (size_t i = 0; i < nodes[x].edges.size(); ++i)
         if (nodes[x].edges[i].dest_node == y)
             nodes[x].edges[i].cost = cost;
 }
 
 inline float Graph::random_cost(float low, float high) const
 {
-    return low + static_cast<float>(rand())/(static_cast<float>(RAND_MAX)/(high-low));
+    return low + (high-low) * static_cast<float>(rand())/static_cast<float>(RAND_MAX);
 }
 
 /// \brief  Test

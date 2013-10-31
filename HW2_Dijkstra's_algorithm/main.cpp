@@ -57,10 +57,10 @@ int main(int argc, char *argv[])
     cout << "Size my: "   << my_graph.node_cnt() << endl;
 
     PriorityQueue queue;    
-    Path new_path({5, 3, 0}, 20.0);
+//    Path new_path({5, 3, 0}, 20.0);
 //    new_path.cost = 20.0;
 //    new_path.path = {5, 3, 0};
-    queue.insert(new_path);       
+//    queue.insert(new_path);       
 //    new_path.cost = 14.0;
 //    new_path.dest = 6;
 //    new_path.path = {5, 2, 0};
@@ -80,7 +80,7 @@ int main(int argc, char *argv[])
     
     cout << fixed << setprecision(3); 
     
-    int times = 1;
+    int times = 10;
     int n_edges = 0;
     for (int i = 0; i < times; ++i)
     {

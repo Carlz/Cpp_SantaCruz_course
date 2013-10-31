@@ -10,6 +10,7 @@
 
 
 #include <vector>
+#include <map>
 #include "Graph.h"
 using namespace std;
 
@@ -19,7 +20,7 @@ using namespace std;
 // Path data structure
 class Path {
 public:
-            Path(): node_list({}), cost(0.0) {}
+            Path(): cost(0.0) {}
             Path(vector<node> nodes, float n_cost): node_list(nodes), cost(n_cost) {}
     node    get_source() const {return node_list.front(); }
     node    get_dest() const {return node_list.back(); }
@@ -63,6 +64,7 @@ private:
     };
     
     vector<Path> path_queue;
+    map<node, Path> path_map;
     
 };
 
