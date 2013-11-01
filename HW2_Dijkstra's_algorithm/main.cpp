@@ -57,12 +57,23 @@ int main(int argc, char *argv[])
     cout << "Size my: "   << my_graph.node_cnt() << endl;
 
     PriorityQueue queue;    
-    Path new_path({5, 3, 0}, 20.0);
+	vector<node> vec(3);
+	vec[0] = 5; vec[1] = 3; vec[2] = 0;
+    Path new_path(vec, 20.0);
     queue.insert(new_path);       
-    Path path_b({5, 2, 0}, 14.0);
+	vec[0] = 5; vec[2] = 3; vec[2] = 0;
+    Path path_b(vec, 14.0);
     queue.insert(path_b);    
-    Path path_c({4, 1, 0}, 17.0);
+	cout << queue;	
+	
+	vec[0] = 0; vec[1] = 2; vec[2] = 4;
+    Path path_c(vec, 17.0);
     queue.insert(path_c);        
+	
+	vec[0] = 1; vec[1] = 3; vec[2] = 5;
+    Path path_d(vec, 15.0);
+    queue.insert(path_d);
+	
 //    new_path.cost = 17.0;
 //    new_path.dest = 6;
 //    new_path.path = {4, 1, 0};
@@ -71,7 +82,7 @@ int main(int argc, char *argv[])
 //    new_path.dest = 6;
 //    new_path.path = {4, 2, 0};
 //    queue.insert(new_path);
-    
+   
     cout << queue;
     
     
@@ -105,5 +116,5 @@ int main(int argc, char *argv[])
     cout << "=============" << endl;
     }
     
-    return 0;
+    // return 0;
 }

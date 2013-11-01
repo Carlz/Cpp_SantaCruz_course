@@ -10,7 +10,7 @@
 
 
 #include <vector>
-#include <map>
+#include <deque>
 #include "Graph.h"
 using namespace std;
 
@@ -65,7 +65,7 @@ private:
     };
     
     vector<Path*> path_queue;
-    vector<Path> path_list;
+    deque<Path> path_list;
     
 };
 

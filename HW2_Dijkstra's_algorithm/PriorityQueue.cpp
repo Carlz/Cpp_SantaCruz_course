@@ -63,15 +63,15 @@ void PriorityQueue::insert(Path& new_path)
     node dest = new_path.get_dest();
     if (dest >= path_list.size())    // One path for each destination
         path_list.resize(dest+1);     // Resize vector if needed
-   cout << "cost:" <<path_list[dest].get_cost() << endl;
     if (path_list[dest].get_size() == 0)     // If path doesn't exist
     {
         path_list[dest] = new_path;
+		cout << "Added cost:" <<path_list[dest].get_cost() << endl;
         path_queue.push_back(&(path_list[dest])); 
         std::push_heap(path_queue.begin(),path_queue.end(), PathCompare(true));
     }
     else
-        cout << "Trow exception - path already there" << endl;
+        cout << "Throw exception - path already there" << endl;
 }   
 
 
@@ -86,19 +86,25 @@ ostream& operator<<(ostream& out, const PriorityQueue& data)
     out << "Min Path: " << data.top().get_dest() << " (" << data.top().get_cost() << ")" << endl;
     out << "Number of paths: " << data.size() << endl;
     out << "Cost\tDest\tPath  -  LIST" << endl;
-    for (size_t i = 0; i < data.path_list.size(); ++ i)
+    for (size_t i = 0; i < data.path_list.size(); ++i)
     {
-        out << data.path_list[i].get_cost() << "\t" << data.path_list[i].get_dest() << "\t";
-        vector<node> node_path = data.path_list[i].get_path();
-        for (size_t j = 0; j < node_path.size(); ++j)
-            out << node_path[j] << " ";
-        out << endl;        
-        
+		if (data.path_list[i].get_size() > 0) 
+		{
+			out << data.path_list[i].get_cost() << "\t" << data.path_list[i].get_dest() << "\t";
+			vector<node> node_path = data.path_list[i].get_path();
+			for (size_t j = 0; j < node_path.size(); ++j)
+				out << node_path[j] << " ";
+			out << endl;
+        }
+		else
+			out << "null" << "\t" << i << "\t" << "null" << endl;
     }
-    out << "Cost\tDest\tPath  -  QUEUE" << endl;
+    out << "Cost\tDest\tSource\tPath  -  QUEUE  -  Elements: " << data.path_queue.size() << endl;
     for (vector<Path*>::const_iterator it = data.path_queue.begin(); it != data.path_queue.end(); ++it)
     {
-        out << (*it)->get_cost() << "\t" << (*it)->get_dest() << "\t";
+		out << (*it)->get_cost()	<< "\t";
+		out << (*it)->get_dest()	<< "\t";
+        out << (*it)->get_source()	<< "\t";
         vector<node> node_path = (*it)->get_path();
         for (size_t j = 0; j < node_path.size(); ++j)
             out << node_path[j] << " ";
