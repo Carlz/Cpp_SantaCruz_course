@@ -57,14 +57,12 @@ int main(int argc, char *argv[])
     cout << "Size my: "   << my_graph.node_cnt() << endl;
 
     PriorityQueue queue;    
-//    Path new_path({5, 3, 0}, 20.0);
-//    new_path.cost = 20.0;
-//    new_path.path = {5, 3, 0};
-//    queue.insert(new_path);       
-//    new_path.cost = 14.0;
-//    new_path.dest = 6;
-//    new_path.path = {5, 2, 0};
-//    queue.insert(new_path);    
+    Path new_path({5, 3, 0}, 20.0);
+    queue.insert(new_path);       
+    Path path_b({5, 2, 0}, 14.0);
+    queue.insert(path_b);    
+    Path path_c({4, 1, 0}, 17.0);
+    queue.insert(path_c);        
 //    new_path.cost = 17.0;
 //    new_path.dest = 6;
 //    new_path.path = {4, 1, 0};
@@ -77,7 +75,8 @@ int main(int argc, char *argv[])
     cout << queue;
     
     
-    
+    if (true)
+    {        
     cout << fixed << setprecision(3); 
     
     int times = 10;
@@ -104,6 +103,7 @@ int main(int argc, char *argv[])
     cout << null_graph;
     djikstra.find_path(null_graph, 0, 9);
     cout << "=============" << endl;
+    }
     
     return 0;
 }
