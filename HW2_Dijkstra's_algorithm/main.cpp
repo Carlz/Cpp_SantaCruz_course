@@ -57,6 +57,7 @@ int main(int argc, char *argv[])
     cout << "Size my: "   << my_graph.node_cnt() << endl;
 
     PriorityQueue queue;    
+
 	vector<node> vec(3);
 	vec[0] = 5; vec[1] = 3; vec[2] = 0;
     Path new_path(vec, 20.0);
@@ -69,10 +70,10 @@ int main(int argc, char *argv[])
 	vec[0] = 0; vec[1] = 2; vec[2] = 4;
     Path path_c(vec, 17.0);
     queue.insert(path_c);        
-	
 	vec[0] = 1; vec[1] = 3; vec[2] = 5;
     Path path_d(vec, 15.0);
     queue.insert(path_d);
+    cout << queue;	
 	
 //    new_path.cost = 17.0;
 //    new_path.dest = 6;
@@ -83,9 +84,6 @@ int main(int argc, char *argv[])
 //    new_path.path = {4, 2, 0};
 //    queue.insert(new_path);
    
-    cout << queue;
-    
-    
     if (true)
     {        
     cout << fixed << setprecision(3); 

@@ -15,13 +15,14 @@
 using namespace std;
 
 #ifndef PRIORITYQUEUE_H
-#define	PRIORITYQUEUE_H
+#define PRIORITYQUEUE_H
 
 // Path data structure
 class Path {
 public:
             Path(): cost(0.0) {}
-            Path(vector<node> nodes, float n_cost): node_list(nodes), cost(n_cost) {}
+            Path(const Path& orig): node_list(orig.node_list), cost(orig.cost) {}
+            Path(vector<node> nodes, float n_cost, int dbg = 0): node_list(nodes), cost(n_cost) {}
     node    get_source() const {return node_list.front(); }
     node    get_dest() const {return node_list.back(); }
     void    add_node(node new_node, float edge_cost) {cost += edge_cost; node_list.push_back(new_node); }
@@ -35,8 +36,8 @@ private:
 
 class PriorityQueue {
 public:
-    PriorityQueue();
-    PriorityQueue(const PriorityQueue& orig);
+    PriorityQueue() : debug_lvl(0) {};
+    PriorityQueue(const PriorityQueue& orig);        // May need special treatment
     virtual ~PriorityQueue();
     
     void chg_prioirity(Path& new_prio);   // changes the priority (node value) of queue element.
@@ -65,9 +66,10 @@ private:
     };
     
     vector<Path*> path_queue;
-    deque<Path> path_list;
+    deque<Path*> path_list;
+    int debug_lvl;
     
 };
 
-#endif	/* PRIORITYQUEUE_H */
+#endif    /* PRIORITYQUEUE_H */
 

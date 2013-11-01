@@ -19,7 +19,7 @@ ShortestPath::~ShortestPath() {
 
 Path ShortestPath::find_path(Graph& base_graph, node src, node dst)
 {
-    cout << "src: " << src << " dest: " << dst << endl;
+    cout << "Searching src: " << src << " dest: " << dst << endl;
     assert((src < base_graph.node_cnt()) && (dst < base_graph.node_cnt()));
     
     PriorityQueue close_set, open_set;
@@ -32,13 +32,13 @@ Path ShortestPath::find_path(Graph& base_graph, node src, node dst)
     
     while ((close_path.get_dest() != dst) && !(empty_open_set))
     {
+         cout << "Start iteration\n";
         node local_src = close_path.get_dest();
         nb_list =  base_graph.neighbours(local_src);
         for (size_t i = 0; i < nb_list.size(); ++i)
         { 
             Path new_path = close_path;
             new_path.add_node(nb_list[i], base_graph.get_edge_value(local_src, nb_list[i]));
-
             float open_cost = open_set.get_cost(nb_list[i]);            
             if (close_set.get_cost(nb_list[i]) < 0)                     // if node is not in the close set
             {

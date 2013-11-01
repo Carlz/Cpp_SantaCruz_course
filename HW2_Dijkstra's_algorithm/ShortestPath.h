@@ -9,7 +9,7 @@
 #include "PriorityQueue.h"
 
 #ifndef SHORTESTPATH_H
-#define	SHORTESTPATH_H
+#define SHORTESTPATH_H
 
 class ShortestPath {
 public:
@@ -28,5 +28,5 @@ private:
 
 };
 
-#endif	/* SHORTESTPATH_H */
+#endif  /* SHORTESTPATH_H */
 
