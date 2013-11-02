@@ -13,10 +13,10 @@ ostream& operator<<(ostream& out, const Path& data)
     ios_base::fmtflags flags = out.flags( );    // Save old output stream flags
     out << fixed << setprecision(2);            // Configure floating point displays
     
-    out << "Cost: " << data.get_cost() << " - Path: ";
+    out << "Path: ";
     for (size_t i = 0; i < data.get_path().size(); ++i)
         out << data.get_path().at(i) << " ";
-    out << endl;
+    out << " -  Cost: " << data.get_cost() << endl;
     
     out.flags(flags);  // Set the output flags to the way they were
     return out;    

@@ -21,7 +21,6 @@ using namespace std;
 class PriorityQueue {
 public:
     PriorityQueue() : debug_lvl(0) {};
-    PriorityQueue(const PriorityQueue& orig);        // May need special treatment
     virtual ~PriorityQueue();
     
     void chg_prioirity(Path& new_prio);   // changes the priority (node value) of queue element.

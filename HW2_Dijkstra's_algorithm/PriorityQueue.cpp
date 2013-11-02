@@ -1,7 +1,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 /// \brief      Priority Queue class implementation
 /// \author     Carlos Sampaio
-/// \file       PriorityQueue.h
+/// \file       PriorityQueue.cpp
 /// \date       27/10/2013
 ///
 ///     Priority Queue class implementation.
@@ -12,10 +12,6 @@
 #include <algorithm>
 #include <assert.h>
 #include "PriorityQueue.h"
-
-// May need special treatment
-PriorityQueue::PriorityQueue(const PriorityQueue& orig) {
-}
 
 PriorityQueue::~PriorityQueue() {
     for (size_t i = 0; i < path_list.size(); ++i)

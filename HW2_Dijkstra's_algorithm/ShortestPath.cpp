@@ -8,12 +8,6 @@
 #include <assert.h>
 #include "ShortestPath.h"
 
-ShortestPath::ShortestPath(const ShortestPath& orig) {
-}
-
-ShortestPath::~ShortestPath() {
-}
-
 bool ShortestPath::find_path(Graph& base_graph, node src, node dst)
 {
     if (debug_lvl > 2)
@@ -72,10 +66,7 @@ bool ShortestPath::find_path(Graph& base_graph, node src, node dst)
         if (debug_lvl > 0)
         {
             cout << "===========================" << endl;        
-            cout << "Found Shortest Path: "; 
-            for (size_t i = 0; i < close_path.get_path().size(); ++i)
-                cout << close_path.get_path().at(i) << " ";
-            cout << endl << "Cost: " << close_path.get_cost() << endl;
+            cout << "Found Shortest " << close_path; 
         }
         path_found = true;
         this->short_path = close_path;

@@ -19,9 +19,11 @@ using namespace std;
 
 class Graph {
 public:
-            Graph(int nd_cnt = 0) { if (nd_cnt > 0) nodes.resize(nd_cnt);} ///< Initialize Graph with nd_cnt nodes.
-    void    randomize(unsigned int nd_cnt = 0, float density = 0,
-                      float cost_low = 1.0, float cost_high = 10.0); ///< Generate a random graph structure base on node count and edge density
+    Graph(int nd_cnt = 0) { if (nd_cnt > 0) nodes.resize(nd_cnt);}    // Initialize Graph with nd_cnt nodes.
+    
+    void    randomize(unsigned int nd_cnt = 0, float density = 0,     // Generate a random graph structure base on
+                      float cost_low = 1.0, float cost_high = 10.0);  // node count and edge density.
+    void    destroy();                      // Clear all graph structure    
     int     node_cnt() const { return nodes.size();}      // Returns the number of nodes in the graph.
     int     edge_cnt() const;               // Returns the number of edges in the graph.
     bool    adjacent(node x, node y) const ;  // Tests whether there is an edge from node x to node y.
@@ -32,7 +34,6 @@ public:
     void    set_node_value(node x, float val);// Sets the value associated with the node x.
     float   get_edge_value(node x, node y) const; // Returns the value associated to the edge (x,y).
     void    set_edge_value (node x, node y, float cost); //Sets the cost associated to the edge (x,y).
-    void    destroy();                      // Clear all graph structure
     friend ostream& operator<<(ostream& out, const Graph& data); // Prints Graph structure on the screen
 
 
