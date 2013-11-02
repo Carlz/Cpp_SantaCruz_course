@@ -31,7 +31,7 @@ void PriorityQueue::chg_prioirity(Path& new_prio)
     }
     else
         this->insert(new_prio);         // If destination doesn't exist, insert new path
-}
+    }
 
 
 // removes the top element of the queue.
@@ -69,7 +69,7 @@ void PriorityQueue::insert(Path& new_path)
         std::push_heap(path_queue.begin(),path_queue.end(), PathCompare(true));
     }
     else
-        cout << "Throw exception - path already there" << endl;
+        cout << "Throw exception - path already there: " << new_path.get_source() << " to " << dest << endl;
 }   
 
 

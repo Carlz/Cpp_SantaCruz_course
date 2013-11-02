@@ -35,7 +35,7 @@ float MonteCarloSimulator::find_average_path(int loop_cnt, int node_cnt, float d
         Graph search_graph;             // Random Graph object to look for paths 
         search_graph.randomize(node_cnt, density, min_cost, max_cost);
         
-        ShortestPath dijkstra(0);
+        ShortestPath dijkstra(0);   // debug level
         
         // Search for paths from node 0 to N-1
         for (node dest = 1; dest < node_cnt; ++dest)

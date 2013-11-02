@@ -16,7 +16,7 @@ bool ShortestPath::find_path(Graph& base_graph, node src, node dst)
     assert((src < base_graph.node_cnt()) && (dst < base_graph.node_cnt()));
     
     bool path_found = false;
-    PriorityQueue close_set, open_set;
+    PriorityQueue close_set(debug_lvl), open_set(debug_lvl);
     Path close_path, return_path;
     vector<node> nb_list;    //neighbours
     bool empty_open_set = false;

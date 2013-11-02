@@ -36,8 +36,6 @@ int main(int argc, char *argv[])
 //    srand(time(0));
     srand(clock());
     
-    cout << endl;
-    
     // Parse command line inputs
     if (argc < 4)
     {
@@ -55,8 +53,10 @@ int main(int argc, char *argv[])
          max_cost = atof(argv[5]);
     
     chrono::time_point<chrono::system_clock> start, end;
-    start = chrono::system_clock::now();    
-    
+    start = chrono::system_clock::now();
+    time_t start_time = chrono::system_clock::to_time_t(start);
+    cout << endl << "started computation at " << ctime(&start_time) << endl;
+            
     monte_carlo.find_average_path(loop_cnt, node_cnt, density, min_cost, max_cost);
 
     end = chrono::system_clock::now();

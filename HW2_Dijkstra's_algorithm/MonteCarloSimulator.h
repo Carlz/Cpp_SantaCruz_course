@@ -14,10 +14,8 @@
 
 class MonteCarloSimulator {
 public:
-    MonteCarloSimulator();
-    MonteCarloSimulator(const MonteCarloSimulator& orig);
-    virtual ~MonteCarloSimulator();
-    
+    MonteCarloSimulator() {}
+   
     float find_average_path(int loop_cnt, int node_cnt, float density, float min_cost, float max_cost);
     
 private:
