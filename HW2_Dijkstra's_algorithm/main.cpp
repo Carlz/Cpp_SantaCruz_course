@@ -33,8 +33,7 @@ int main(int argc, char *argv[])
 {
     MonteCarloSimulator monte_carlo;
     
-//    srand(time(0));
-    srand(clock());
+    srand(time(0));
     
     // Parse command line inputs
     if (argc < 4)

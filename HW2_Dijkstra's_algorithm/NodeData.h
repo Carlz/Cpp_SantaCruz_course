@@ -8,7 +8,8 @@
 #ifndef NODEDATA_H
 #define	NODEDATA_H
 
-typedef unsigned short int node;      // Node index type
+typedef unsigned short int node;            // Node index type
+typedef float cost_type;                    // Edge and Node cost type
 
 class NodeData {
 public:
