@@ -29,90 +29,131 @@ using namespace std;
 ///
 int main(int argc, char *argv[])
 {
-    srand(clock());
+    srand(time(0));
     
     Graph null_graph;
     Graph my_graph(7);
-    
-    my_graph.add_edge(0,1,9);
-    my_graph.add_edge(0,2,3);
-    my_graph.add_edge(0,3,5);
-    my_graph.add_edge(1,4,2);
-    my_graph.add_edge(2,4,1);
-    my_graph.add_edge(2,5,4);
-    my_graph.add_edge(3,5,8);
-    my_graph.add_edge(4,6,6);
-    my_graph.add_edge(5,6,7);
-    
-    cout << "Number of Edges (null_graph): " << null_graph.edge_cnt() << endl;
-    cout << "Number of Edges (my_graph): " << my_graph.edge_cnt() << endl;
-    
-    cout << "Number of Edges (null_graph): " << null_graph.edge_cnt() << endl;
-    cout << "Number of Edges (my_graph): " << my_graph.edge_cnt() << endl;
-    
-    cout << null_graph;
-    cout << my_graph;
-    
-    cout << "Size null: " << null_graph.node_cnt() << endl;
-    cout << "Size my: "   << my_graph.node_cnt() << endl;
-
-    PriorityQueue queue;    
-
-	vector<node> vec(3);
-	vec[0] = 5; vec[1] = 3; vec[2] = 0;
-    Path new_path(vec, 20.0);
-    queue.insert(new_path);       
-	vec[0] = 5; vec[2] = 3; vec[2] = 0;
-    Path path_b(vec, 14.0);
-    queue.insert(path_b);    
-	cout << queue;	
-	
-	vec[0] = 0; vec[1] = 2; vec[2] = 4;
-    Path path_c(vec, 17.0);
-    queue.insert(path_c);        
-	vec[0] = 1; vec[1] = 3; vec[2] = 5;
-    Path path_d(vec, 15.0);
-    queue.insert(path_d);
-    cout << queue;	
-	
-//    new_path.cost = 17.0;
-//    new_path.dest = 6;
-//    new_path.path = {4, 1, 0};
-//    queue.insert(new_path);
-//    new_path.cost = 10.0;
-//    new_path.dest = 6;
-//    new_path.path = {4, 2, 0};
-//    queue.insert(new_path);
-   
-    if (true)
-    {        
-    cout << fixed << setprecision(3); 
-    
-    int times = 10;
-    int n_edges = 0;
-    for (int i = 0; i < times; ++i)
+    if (false)
     {
-        null_graph.randomize(50, 0.2);
-        n_edges += null_graph.edge_cnt();
+        my_graph.add_edge(0,1,9);
+        my_graph.add_edge(0,2,3);
+        my_graph.add_edge(0,3,5);
+        my_graph.add_edge(1,4,2);
+        my_graph.add_edge(2,4,1);
+        my_graph.add_edge(2,5,4);
+        my_graph.add_edge(3,5,8);
+        my_graph.add_edge(4,6,6);
+        my_graph.add_edge(5,6,7);
+
+        cout << "Number of Edges (null_graph): " << null_graph.edge_cnt() << endl;
+        cout << "Number of Edges (my_graph): " << my_graph.edge_cnt() << endl;
+
+        cout << "Number of Edges (null_graph): " << null_graph.edge_cnt() << endl;
+        cout << "Number of Edges (my_graph): " << my_graph.edge_cnt() << endl;
+
+        cout << null_graph;
+        cout << my_graph;
+
+        cout << "Size null: " << null_graph.node_cnt() << endl;
+        cout << "Size my: "   << my_graph.node_cnt() << endl;
+
+        PriorityQueue queue;    
+
+        vector<node> vec(3);
+        vec[0] = 5; vec[1] = 3; vec[2] = 0;
+        Path new_path(vec, 20.0);
+        queue.insert(new_path);       
+        vec[0] = 5; vec[2] = 3; vec[2] = 0;
+        Path path_b(vec, 14.0);
+        queue.insert(path_b);    
+        cout << queue;	
+
+        vec[0] = 0; vec[1] = 2; vec[2] = 4;
+        Path path_c(vec, 17.0);
+        queue.insert(path_c);        
+        vec[0] = 1; vec[1] = 3; vec[2] = 5;
+        Path path_d(vec, 15.0);
+        queue.insert(path_d);
+        cout << queue;	
+	}
+    
+    if (false)
+    {        
+        cout << fixed << setprecision(3); 
+
+        int times = 100;
+        int n_edges = 0;
+        for (int i = 0; i < times; ++i)
+        {
+            null_graph.randomize(50, 0.4);
+            n_edges += null_graph.edge_cnt();
+        }
+        cout << "Edges mean: " << static_cast<float>(n_edges)/static_cast<float>(times) << endl;
+        
+        cout << "=============" << endl;        
     }
-    cout << "Edges mean: " << static_cast<float>(n_edges)/static_cast<float>(times) << endl;
+
+    ShortestPath dijkstra(0);    
     
-    
-    
-    cout << "=============" << endl;
-    
+    if (false)
+    {       
     cout << my_graph;
     
-    ShortestPath djikstra;
-    djikstra.find_path(my_graph, 0, 6);
+    if (dijkstra.find_path(my_graph, 0, 6))
+        cout << dijkstra.get_path() << endl;
+    else
+        cout << "No shortest path" << endl;
     
     cout << "=============" << endl;
     
-    null_graph.randomize(10, 0.2);    
+    null_graph.randomize(50, 1);    
     cout << null_graph;
-    djikstra.find_path(null_graph, 0, 9);
+    for (int i = 1; i < 50; ++i)
+    {
+        if (dijkstra.find_path(null_graph, 0, i))
+        {
+            cout << dijkstra.get_path() << endl;
+        }
+        else
+            cout << "No shortest path" << endl;
+    }
+//    if (dijkstra.find_path(null_graph, 0, 8))
+//        cout << dijkstra.get_path() << endl;
+//    else
+//        cout << "No shortest path" << endl;
     cout << "=============" << endl;
     }
     
-    // return 0;
+    if (true)
+    {
+        int loop_max = atoi(argv[1]);
+        float density = atof(argv[2]);
+        int node_cnt = 50;
+        float mean_cost = 0.0;
+        float average_size = 0.0;
+        int acc_edge = 0;
+        for (int loop = 0; loop < loop_max; ++loop)
+        {   
+            int found_n = 0;
+            float accum = 0.0;
+            int acc_size = 0;
+            null_graph.randomize(node_cnt, density);
+            for (node dest = 1; dest < node_cnt; ++dest)
+                if (dijkstra.find_path(null_graph, 0, dest))
+                {
+                    accum += dijkstra.get_path().get_cost();
+                    acc_size += dijkstra.get_size() - 1 ;
+                    ++found_n;
+                }
+            mean_cost += accum/static_cast<float>(found_n);
+            average_size += static_cast<float>(acc_size)/static_cast<float>(found_n);
+            acc_edge += null_graph.edge_cnt();
+        }
+        cout << fixed << setprecision(2);
+        cout << "Edges: " << static_cast<float>(acc_edge)/loop_max << endl;
+        float result = mean_cost/static_cast<float>(loop_max);
+        float result_size = average_size/static_cast<float>(loop_max);
+        cout << "Density: " << density << " Cost: " << result << " Length: " << result_size << endl;
+    }
+    return 0;
 }

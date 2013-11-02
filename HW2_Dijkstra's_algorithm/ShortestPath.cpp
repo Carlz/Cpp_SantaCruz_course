@@ -8,31 +8,33 @@
 #include <assert.h>
 #include "ShortestPath.h"
 
-ShortestPath::ShortestPath() {
-}
-
 ShortestPath::ShortestPath(const ShortestPath& orig) {
 }
 
 ShortestPath::~ShortestPath() {
 }
 
-Path ShortestPath::find_path(Graph& base_graph, node src, node dst)
+bool ShortestPath::find_path(Graph& base_graph, node src, node dst)
 {
-    cout << "Searching src: " << src << " dest: " << dst << endl;
+    if (debug_lvl > 2)
+        cout << "Searching src: " << src << " dest: " << dst << endl;
+    
     assert((src < base_graph.node_cnt()) && (dst < base_graph.node_cnt()));
     
+    bool path_found = false;
     PriorityQueue close_set, open_set;
     Path close_path, return_path;
     vector<node> nb_list;    //neighbours
     bool empty_open_set = false;
+    int iteration = 0;
     
     close_path.add_node(src, 0.0);
     close_set.insert(close_path);
     
     while ((close_path.get_dest() != dst) && !(empty_open_set))
     {
-         cout << "Start iteration\n";
+        if (debug_lvl > 2)
+            cout << "Start iteration " << ++iteration << endl;
         node local_src = close_path.get_dest();
         nb_list =  base_graph.neighbours(local_src);
         for (size_t i = 0; i < nb_list.size(); ++i)
@@ -57,22 +59,33 @@ Path ShortestPath::find_path(Graph& base_graph, node src, node dst)
         else
             empty_open_set = true;
         
-        cout << "===========================" << endl;
-        cout << "Close set:" << endl << close_set;
-        cout << "Open set:" << endl << open_set;        
+        if (debug_lvl > 2)
+        {
+            cout << "===========================" << endl;
+            cout << "Close set:" << endl << close_set;
+            cout << "Open set:" << endl << open_set;
+        }
     }
     //
     if (close_path.get_dest() == dst)
     {
-        cout << "===========================" << endl;        
-        cout << "Found Shortest Path: "; 
-        for (size_t i = 0; i < close_path.get_path().size(); ++i)
-            cout << close_path.get_path().at(i) << " ";
-        cout << endl << "Cost: " << close_path.get_cost() << endl;
-        return_path = close_path;
+        if (debug_lvl > 0)
+        {
+            cout << "===========================" << endl;        
+            cout << "Found Shortest Path: "; 
+            for (size_t i = 0; i < close_path.get_path().size(); ++i)
+                cout << close_path.get_path().at(i) << " ";
+            cout << endl << "Cost: " << close_path.get_cost() << endl;
+        }
+        path_found = true;
+        this->short_path = close_path;
     }
     else
-        cout << "No Path between nodes " << src << " and " << dst << "!" << endl; 
+    {
+        this->short_path = Path();        
+        if (debug_lvl > 0)
+            cout << "No Path between nodes " << src << " and " << dst << "!" << endl;
+    }
 
-    return return_path;
+    return path_found;
 }

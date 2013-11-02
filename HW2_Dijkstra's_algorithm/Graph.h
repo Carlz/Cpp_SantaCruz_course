@@ -11,12 +11,11 @@
 #include <iostream>
 #include <cstdlib>
 #include <vector>
+#include "NodeData.h"
 using namespace std;
 
 #ifndef GRAPH_H
 #define	GRAPH_H
-
-typedef unsigned short int node;      // Node index type
 
 class Graph {
 public:

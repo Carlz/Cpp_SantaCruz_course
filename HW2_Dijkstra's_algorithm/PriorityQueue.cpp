@@ -28,10 +28,10 @@ void PriorityQueue::chg_prioirity(Path& new_prio)
 {
     assert(new_prio.get_size() > 0);
     node dest = new_prio.get_dest();
-    if (this->get_cost(dest) >= 0)      // If destination already exists
+    if (path_list[dest] != NULL)      // If destination already exists
     {
         *(path_list[dest]) = new_prio;  // Update Path and re-sort heap
-        std::sort_heap(path_queue.begin(), path_queue.end(), PathCompare(true));
+        std::make_heap(path_queue.begin(), path_queue.end(), PathCompare(true));
     }
     else
         this->insert(new_prio);         // If destination doesn't exist, insert new path
@@ -67,7 +67,7 @@ void PriorityQueue::insert(Path& new_path)
     if (path_list[dest] == NULL)     // If path doesn't exist
     {
         path_list[dest] = new Path(new_path);
-        if (debug_lvl > 2)
+        if (debug_lvl > 4)
             cout << "Added path to " << dest << " with cost: " << path_list[dest]->get_cost() << endl;
         path_queue.push_back(path_list[dest]); 
         std::push_heap(path_queue.begin(),path_queue.end(), PathCompare(true));
