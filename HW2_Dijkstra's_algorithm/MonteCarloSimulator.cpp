@@ -1,22 +1,18 @@
 ////////////////////////////////////////////////////////////////////////////////
-/// \brief      Priority Queue class implementation
+/// \brief      Monte Carlo Simulator flow control implementation.
 /// \author     Carlos Sampaio
 /// \file       MonteCarloSimulator.cpp
 /// \date       02/11/2013
 ///
-///     Priority Queue class implementation.
+///     Monte Carlo Simulator flow control implementation.
 ///
 ////////////////////////////////////////////////////////////////////////////////
 
 #include "MonteCarloSimulator.h"
 
-/// \brief  Main function.
-/// \param  argc    Number of command line arguments
-/// \param  argv    Array of command line arguments
-/// \return         
-///
-float MonteCarloSimulator::find_average_path(int loop_cnt, int node_cnt, float density,
-                                             float min_cost, float max_cost) 
+// Main method to generate Monte Carlos simulation for the average shortest path in a collection of graphs.
+cost_type MonteCarloSimulator::find_average_path(int loop_cnt, int node_cnt, float density,
+                                             cost_type min_cost, cost_type max_cost) 
 {
     double global_acc_cost = 0.0;       // accumulate number of paths cost in all graphs
     double global_acc_size = 0.0;       // accumulate number of paths edge count in all graphs
@@ -29,13 +25,13 @@ float MonteCarloSimulator::find_average_path(int loop_cnt, int node_cnt, float d
     for (int loop = 0; loop < loop_cnt; ++loop)
     {   
         int found_n = 0;                // number of paths found in this graph
-        float acc_cost = 0.0;           // accumulate number of paths cost in this graph
+        cost_type acc_cost = 0.0;       // accumulate number of paths cost in this graph
         int acc_size = 0;               // accumulate number of paths edge count in this graph
         
         Graph search_graph;             // Random Graph object to look for paths 
         search_graph.randomize(node_cnt, density, min_cost, max_cost);
         
-        ShortestPath dijkstra(0);   // debug level
+        ShortestPath dijkstra(0);       // debug level
         
         // Search for paths from node 0 to N-1
         for (node dest = 1; dest < node_cnt; ++dest)
@@ -52,14 +48,15 @@ float MonteCarloSimulator::find_average_path(int loop_cnt, int node_cnt, float d
         global_acc_edge += search_graph.edge_cnt();
     }
 
-    float average_cost  = global_acc_cost/loop_cnt;
+    // Calculate final averages
+    cost_type average_cost  = global_acc_cost/loop_cnt;
     float average_size  = global_acc_size/loop_cnt;
     float average_edges = static_cast<float>(global_acc_edge)/loop_cnt;    
     
     ios_base::fmtflags flags = cout.flags( );    // Save old output stream flags
     cout << fixed << setprecision(2);            // Configure floating point display
     
-    cout << "average path cost:\t" << average_cost << endl
+    cout << "average path cost:\t" << average_cost << endl      // Print answers
          << "average path edges:\t" << average_size << endl
          << "average graph edges:\t" << average_edges << endl;
 

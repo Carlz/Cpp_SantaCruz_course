@@ -4,7 +4,7 @@
 /// \file       Graph.cpp
 /// \date       20/10/2013
 ///
-///     Graph class implementation.
+///     Graph class implements an undirected Graph with positive costs.
 ///
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -16,16 +16,14 @@
 // Public methods
 //-----------------
 
-/// \brief  Generate a random graph structure base on node count and edge density
-/// \param  node_cnt      Node count: number of nodes in the Graph
-/// \param  density     Graph edges density: values range from 0.0 to 1.0
+// Generate a random graph structure based on node count, edge density and edge cost range
 void Graph::randomize(unsigned int node_cnt, float density, cost_type cost_low, cost_type cost_high)
 {
-    this->destroy();                                    // clear previous Graph data
+    this->destroy();                                      // clear previous Graph data
     if (node_cnt == 0) return;                            // stop if empty Graph was defined
     nodes.resize(node_cnt);                               // else create requested number of nodes
-    node_values.resize(node_cnt);                               // else create requested number of nodes
-    if (density <= 0) return;                           // stop if zero density Graph was defined
+    node_values.resize(node_cnt);                         // else create requested number of nodes
+    if (density <= 0) return;                             // stop if zero density Graph was defined
     for (node src = 0; src < node_cnt; ++src)             // else iterate over possible edges
        for (node dst = src + 1; dst < node_cnt; ++dst)    // and add them randomly based on requested
            this->add_random_edge(src, dst, density, cost_low, cost_high); // density and cost range
@@ -41,8 +39,7 @@ void Graph::destroy()
     nodes.clear();
 }
 
-/// \brief  Returns the number of edges in the graph.
-/// \return Number of edges
+// Returns the number of edges in the graph.
 int Graph::edge_cnt() const
 {
     int n_edges = 0;
@@ -57,9 +54,9 @@ bool Graph::adjacent(node src, node dst) const
 {
     assert(src < nodes.size());
 
-    for (size_t i = 0; i < nodes[src].size(); ++i)
+    for (size_t i = 0; i < nodes[src].size(); ++i)  // Search in the adjacent list the destination node
     {
-        if (nodes[src][i].first == dst)     // first = dest_node
+        if (nodes[src][i].first == dst)             // first = dest_node
             return true;
     }
     return false;
@@ -68,12 +65,11 @@ bool Graph::adjacent(node src, node dst) const
 // Lists all nodes dst such that there is an edge from src to dst.
 vector<node> Graph::neighbours(node src) const
 {
-    assert(static_cast<size_t>(src) < nodes.size());
-    vector<node> nb_list;         // Neighbours list
-    if (static_cast<size_t>(src) >= nodes.size())
+    vector<node> nb_list;                           // Neighbours list
+    if (static_cast<size_t>(src) >= nodes.size())   // check if node is within graph's range
         return nb_list;    
-    for (size_t i = 0; i < nodes[src].size(); ++i)
-        nb_list.push_back(nodes[src][i].first);   // first = dest_node
+    for (size_t i = 0; i < nodes[src].size(); ++i)  // Collect adjacent list
+        nb_list.push_back(nodes[src][i].first);     // first = dest_node
     return nb_list;
 }
 
@@ -83,23 +79,23 @@ void Graph::add_edge(node src, node dst, cost_type cost = 0.0)
 {
     assert(cost >= 0);
     
-    if (src >= nodes.size())
+    if (src >= nodes.size())        // expand graph if source node is beyond limits
     {
         nodes.resize(src);
         node_values.resize(src);
     }
             
-    if (dst >= nodes.size())
+    if (dst >= nodes.size())        // expand graph if destination node is beyond limits
     {
         nodes.resize(dst);
         node_values.resize(dst);
     }
         
-    if (!this->adjacent(src, dst))
+    if (!this->adjacent(src, dst))      // If there isn't already an edge between src and dest
     {
-        edge_data new_edge;
+        edge_data new_edge;             // Create a new edge in boath directions
         new_edge.first  = dst;          // dest_node
-        new_edge.second = cost;       // cost
+        new_edge.second = cost;         // edge cost
         nodes[src].push_back(new_edge);
         new_edge.first = src;
         nodes[dst].push_back(new_edge);
@@ -112,7 +108,7 @@ void Graph::delete_edge(node src, node dst)
 {
     assert(src < nodes.size() && dst < nodes.size());
 
-    this->delete_edge_uni(src, dst);
+    this->delete_edge_uni(src, dst);    // delete edges in both directions
     this->delete_edge_uni(dst, src);
 }
 
@@ -138,7 +134,7 @@ cost_type Graph::get_edge_value(node src, node dst) const
     
     for (size_t i = 0; i < nodes[src].size(); ++i)
         if (nodes[src][i].first == dst)             // first = dest_node
-            return nodes[src][i].second;          // second = cost
+            return nodes[src][i].second;            // second = cost
     // If edge does not exist, return a negative number
     return -1.0;
 }
@@ -152,6 +148,7 @@ void Graph::set_edge_value (node src, node dst, cost_type cost)
     this->set_edge_value_uni(dst, src, cost);
 }
 
+// Prints Graph structure on the screen
 ostream& operator<<(ostream& out, const Graph& data)
 {
     if (data.node_cnt() == 0)
@@ -163,10 +160,10 @@ ostream& operator<<(ostream& out, const Graph& data)
     out << "Number of nodes: " << data.node_cnt() << endl;
     out << "Number of edges: " << data.edge_cnt() << endl;
     out << "Source\tDestination(cost)" << endl;
-    for (node src = 0; src < data.nodes.size(); ++src)
+    for (node src = 0; src < data.nodes.size(); ++src)              // Go through all nodes
     {
         out << src << "\t";
-        for (size_t dst = 0; dst < data.nodes[src].size(); ++dst)
+        for (size_t dst = 0; dst < data.nodes[src].size(); ++dst)   // for edge print destination and cost
         {
             out << data.nodes[src][dst].first << "(";       // dest_node
             out << data.nodes[src][dst].second << ") ";     // cost
@@ -181,6 +178,7 @@ ostream& operator<<(ostream& out, const Graph& data)
 // Private methods
 //-----------------
 
+// Delete unidirectional edge, as helper function for delete_edge method.
 void Graph::delete_edge_uni(node src, node dst)
 {
     vector<edge_data>* node_edges = &(nodes[src]);
@@ -192,7 +190,7 @@ void Graph::delete_edge_uni(node src, node dst)
         }
 }
 
-//Sets the value associated to the edge (src,dst) to cost.    
+//Sets the value associated to the unidirection edge (src,dst) to cost. Helper for set_edge_value method.
 void Graph::set_edge_value_uni(node src, node dst, cost_type cost)
 {
     for (size_t i = 0; i < nodes[src].size(); ++i)
@@ -200,12 +198,13 @@ void Graph::set_edge_value_uni(node src, node dst, cost_type cost)
             nodes[src][i].second = cost;  // cost
 }
 
+// Produces a random cost
 inline cost_type Graph::random_cost(cost_type low, cost_type high) const
 {
     return low + (high-low) * static_cast<cost_type>(rand())/static_cast<cost_type>(RAND_MAX);
 }
 
-/// \brief  Test
+// Add a random edge for given density and cost range
 void Graph::add_random_edge(node src, node dst, float density, cost_type cost_low, cost_type cost_high)
 {
     float prob = static_cast<float>(rand())/static_cast<float>(RAND_MAX);

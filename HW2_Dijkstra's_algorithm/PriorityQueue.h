@@ -11,6 +11,7 @@
 
 #include <vector>
 #include <deque>
+#include "Graph_pkg.h"
 #include "Graph.h"
 #include "Path.h"
 using namespace std;
@@ -20,23 +21,24 @@ using namespace std;
 
 class PriorityQueue {
 public:
-    PriorityQueue(int debug_lvl) : debug_lvl(debug_lvl) {}
-    virtual ~PriorityQueue();
+    PriorityQueue(int debug_lvl) : debug_lvl(debug_lvl) {}  // Simple constructor
+    virtual ~PriorityQueue();             // Destructor to delete dynamically allocated Path objects.
     
     void chg_prioirity(Path& new_prio);   // changes the priority (node value) of queue element.
     void pop_top();                       // removes the top element of the queue.
-    float get_cost(node dest) const;       // does the queue contain queue_element? verify with positive cost.
-    void insert(Path& new_path);         // insert queue_element into queue
-    Path top() const                 // returns the top element of the queue.
+    cost_type get_cost(node dest) const;  // Does the queue contain queue_element? verify with positive cost.
+    void insert(Path& new_path);          // Insert a new path into queue
+    Path top() const                      // Returns the top element of the queue.
         {return *(path_queue.front()); }
-    int size() const                      // return the number of queue_elements.
+    int size() const                      // Return the number of queue_elements.
         {return path_queue.size(); }
-    friend ostream& operator<<(ostream& out, const PriorityQueue& data); // Prints PriorityQueue structure on the screen    
+    friend ostream& operator<<(ostream& out, const PriorityQueue& data); // Prints PriorityQueue structure on the screen
     
 private:
+    // Object used to compare paths in the queue
     class PathCompare {
     public:
-        PathCompare(const bool& min_first = false) {reverse = min_first;}
+        PathCompare(const bool& min_first = false) : reverse(min_first) {}   // Use min_first = true for Minimum Priority Queue
         bool operator() (const Path* path_a, const Path* path_b) const
         {
             if (reverse)
@@ -48,9 +50,9 @@ private:
         bool reverse;
     };
     
-    vector<Path*> path_queue;
-    deque<Path*> path_list;
-    int debug_lvl;
+    vector<Path*> path_queue;       // Queue of Paths organized as a Min Heap
+    vector<Path*> path_list;        // List of Paths for direct random acess
+    int debug_lvl;                  // Object debug level
     
 };
 

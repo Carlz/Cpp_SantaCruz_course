@@ -13,13 +13,14 @@
 #include <assert.h>
 #include "PriorityQueue.h"
 
+// Destructor to delete dynamically allocated Path objects.
 PriorityQueue::~PriorityQueue() {
     for (size_t i = 0; i < path_list.size(); ++i)
         if (path_list[i] != NULL)
             delete path_list[i];
 }
 
-// changes the priority (node value) of queue element.
+// Changes the priority (path and cost) of queue element (destination).
 void PriorityQueue::chg_prioirity(Path& new_prio)
 {
     assert(new_prio.get_size() > 0);
@@ -34,45 +35,49 @@ void PriorityQueue::chg_prioirity(Path& new_prio)
     }
 
 
-// removes the top element of the queue.
+// Removes the top element of the queue.
 void PriorityQueue::pop_top()
 {
-    std::pop_heap(path_queue.begin(), path_queue.end(), PathCompare(true)); 
-    Path* path_ptr = path_queue.back();
-    path_queue.pop_back();    
-    path_list[path_ptr->get_dest()] = NULL;
-    delete path_ptr;
+    std::pop_heap(path_queue.begin(), path_queue.end(), PathCompare(true));     // Pop from heap
+    Path* path_ptr = path_queue.back();                                         // Get pointer
+    path_queue.pop_back();                                                      // Remove from queue vector
+    path_list[path_ptr->get_dest()] = NULL;                                     // Clear pointer in direct list
+    delete path_ptr;                                                            // Delete Path object
 }
 
-// does the queue contain queue_element? verify with positive cost.
-float PriorityQueue::get_cost(node dest) const
+// Get the path cost associated with destination node.
+// Does the queue contain this queue_element? Verify with positive cost.
+cost_type PriorityQueue::get_cost(node dest) const
 {
     if (dest < path_list.size() && path_list[dest] != NULL)     // if Path exists
-        return path_list[dest]->get_cost();                      // return its cost
-    else                                                         // else if not exists, return negative
+        return path_list[dest]->get_cost();                     // return its cost
+    else                                                        // else if not exists, return negative
         return -1.0;            
 }
 
-// insert queue_element into queue
+// Insert a new path into queue
 void PriorityQueue::insert(Path& new_path)
 {
     assert(new_path.get_size() > 0);
     node dest = new_path.get_dest();
     if (dest >= path_list.size())    // One path for each destination
-        path_list.resize(dest+1);     // Resize vector if needed
+        path_list.resize(dest+1);    // Resize vector if needed
     if (path_list[dest] == NULL)     // If path doesn't exist
     {
-        path_list[dest] = new Path(new_path);
+        path_list[dest] = new Path(new_path);   // Allocate new path on the direct list
         if (debug_lvl > 4)
             cout << "Added path to " << dest << " with cost: " << path_list[dest]->get_cost() << endl;
-        path_queue.push_back(path_list[dest]); 
+        path_queue.push_back(path_list[dest]);  // Add new path pointer in the Min Heap Queue
         std::push_heap(path_queue.begin(),path_queue.end(), PathCompare(true));
     }
-    else
+    else    // Warn if path already existed
+    {
         cout << "Throw exception - path already there: " << new_path.get_source() << " to " << dest << endl;
+        throw 10;
+    }
 }   
 
-
+// Prints PriorityQueue structure on the screen
 ostream& operator<<(ostream& out, const PriorityQueue& data)
 {
     if (data.size() == 0)
@@ -83,10 +88,10 @@ ostream& operator<<(ostream& out, const PriorityQueue& data)
 
     out << "Min Path: " << data.top().get_dest() << " (" << data.top().get_cost() << ")" << endl;
     out << "Number of paths: " << data.size() << endl;
-    if (data.debug_lvl > 2) 
-    {
+    if (data.debug_lvl > 2)                             // In extended debug mode, go trough direct access list
+    {                                                   // and print existing queue elements
         out << "Cost\tDest\tPath  -  LIST" << endl;
-        for (size_t i = 0; i < data.path_list.size(); ++i)
+        for (size_t i = 0; i < data.path_list.size(); ++i)  
         {
             if (data.path_list[i] != NULL) 
             {
@@ -100,12 +105,12 @@ ostream& operator<<(ostream& out, const PriorityQueue& data)
                 out << "null" << "\t" << i << "\t" << "null" << endl;
         }
     }
-    out << "Cost\tDest\tSource\tPath" << endl;
+    out << "Cost\tDest\tSource\tPath" << endl;      // In regular situation uses min heap queue to print
     for (vector<Path*>::const_iterator it = data.path_queue.begin(); it != data.path_queue.end(); ++it)
-    {
-        out << (*it)->get_cost()    << "\t";
+    {                                               // Go in each element, print cost, destination, source
+        out << (*it)->get_cost()    << "\t";        // and complete path
         out << (*it)->get_dest()    << "\t";
-        out << (*it)->get_source()    << "\t";
+        out << (*it)->get_source()  << "\t";
         vector<node> node_path = (*it)->get_path();
         for (size_t j = 0; j < node_path.size(); ++j)
             out << node_path[j] << " ";
