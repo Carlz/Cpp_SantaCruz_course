@@ -13,6 +13,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include <iostream>
+#include <iomanip>
 #include <cstdlib>
 #include <ctime>
 #include <chrono>
@@ -50,6 +51,8 @@ int main(int argc, char *argv[])
          min_cost = atof(argv[4]);
     if (argc > 5)
          max_cost = atof(argv[5]);
+    
+    cout << fixed << setprecision(1);            // Configure floating point display
     
     // Get start time - Requires C++11
     chrono::time_point<chrono::system_clock> start, end;

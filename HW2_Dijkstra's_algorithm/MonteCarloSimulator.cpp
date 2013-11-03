@@ -44,14 +44,14 @@ cost_type MonteCarloSimulator::find_average_path(int loop_cnt, int node_cnt, flo
         
         // Include this Graph instance results in global Monte Carlo data
         global_acc_cost += acc_cost/found_n;
-        global_acc_size += static_cast<float>(acc_size)/found_n;
+        global_acc_size += static_cast<double>(acc_size)/found_n;
         global_acc_edge += search_graph.edge_cnt();
     }
 
     // Calculate final averages
     cost_type average_cost  = global_acc_cost/loop_cnt;
-    float average_size  = global_acc_size/loop_cnt;
-    float average_edges = static_cast<float>(global_acc_edge)/loop_cnt;    
+    double average_size  = global_acc_size/loop_cnt;
+    double average_edges = static_cast<double>(global_acc_edge)/loop_cnt;    
     
     ios_base::fmtflags flags = cout.flags( );    // Save old output stream flags
     cout << fixed << setprecision(2);            // Configure floating point display
