@@ -12,28 +12,28 @@ Results:
 
 C:\>hw2_dijkstra_s_algorithm.exe 10000 50 0.2
 
-started computation at Sun Nov 03 19:37:32 2013
+started computation at Sun Nov 03 23:05:44 2013
 
 loops: 10000  nodes: 50  density: 0.2  cost: [1.0,10.0)
-average path cost:      6.98
-average path edges:     2.63
-average graph edges:    244.83
+average path cost:      6.99
+average path edges:     2.62
+average graph edges:    244.99
 
-finished computation at Sun Nov 03 19:39:51 2013
-elapsed time: 138.38s
+finished computation at Sun Nov 03 23:07:21 2013
+elapsed time: 97.12s
 
 
 C:\>hw2_dijkstra_s_algorithm.exe 10000 50 0.4
 
-started computation at Sun Nov 03 19:40:08 2013
+started computation at Sun Nov 03 22:55:05 2013
 
 loops: 10000  nodes: 50  density: 0.4  cost: [1.0,10.0)
 average path cost:      4.71
 average path edges:     2.29
-average graph edges:    490.12
+average graph edges:    489.99
 
-finished computation at Sun Nov 03 19:43:41 2013
-elapsed time: 213.36s
+finished computation at Sun Nov 03 22:57:44 2013
+elapsed time: 158.91s
 
 
 Please find attached the source files.

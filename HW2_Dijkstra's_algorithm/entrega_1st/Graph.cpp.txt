@@ -34,8 +34,8 @@ void Graph::destroy()
 {
     int n_nodes = this->node_cnt();
     if (n_nodes == 0) return;
-    for (node_iterator it = nodes.begin() ; it != nodes.end(); ++it)
-        it->clear();
+    for (int i = 0; i < n_nodes; ++i)
+        nodes[i].clear();
     nodes.clear();
 }
 
@@ -43,8 +43,8 @@ void Graph::destroy()
 int Graph::edge_cnt() const
 {
     int n_edges = 0;
-    for (node_const_iterator it = nodes.begin(); it != nodes.end(); ++it )
-        n_edges += it->size();
+    for (size_t i = 0; i < nodes.size(); ++i )
+        n_edges += nodes[i].size();
     return n_edges/2;   // undirected graph - edges counted in double
 }
 
@@ -54,21 +54,23 @@ bool Graph::adjacent(node src, node dst) const
 {
     assert(src < nodes.size());
 
-    // Search in the adjacent list the destination node
-    for (edge_const_iterator it = nodes[src].begin(); it != nodes[src].end(); ++it)
+    for (size_t i = 0; i < nodes[src].size(); ++i)  // Search in the adjacent list the destination node
     {
-        if (it->first == dst)             // first = dest_node
+        if (nodes[src][i].first == dst)             // first = dest_node
             return true;
     }
     return false;
 }
 
 // Lists all nodes dst such that there is an edge from src to dst.
-vector<edge_data> Graph::neighbours(node src) const
+vector<node> Graph::neighbours(node src) const
 {
-    assert(static_cast<size_t>(src) < nodes.size());   // check if node is within graph's range
-  
-    return nodes[src];
+    vector<node> nb_list;                           // Neighbours list
+    if (static_cast<size_t>(src) >= nodes.size())   // check if node is within graph's range
+        return nb_list;    
+    for (size_t i = 0; i < nodes[src].size(); ++i)  // Collect adjacent list
+        nb_list.push_back(nodes[src][i].first);     // first = dest_node
+    return nb_list;
 }
 
 // Adds the edge from src to dst, if it is not there.
@@ -130,9 +132,9 @@ cost_type Graph::get_edge_value(node src, node dst) const
 {
     assert(src < nodes.size());
     
-    for (edge_const_iterator it = nodes[src].begin(); it != nodes[src].end(); ++it)
-        if (it->first == dst)             // first = dest_node
-            return it->second;            // second = cost
+    for (size_t i = 0; i < nodes[src].size(); ++i)
+        if (nodes[src][i].first == dst)             // first = dest_node
+            return nodes[src][i].second;            // second = cost
     // If edge does not exist, return a negative number
     return -1.0;
 }
@@ -160,11 +162,11 @@ ostream& operator<<(ostream& out, const Graph& data)
     out << "Source\tDestination(cost)" << endl;
     for (node src = 0; src < data.nodes.size(); ++src)              // Go through all nodes
     {
-        out << src << "\t";                                         // for edge print destination and cost
-        for (edge_const_iterator it = data.nodes[src].begin(); it != data.nodes[src].end(); ++it)
+        out << src << "\t";
+        for (size_t dst = 0; dst < data.nodes[src].size(); ++dst)   // for edge print destination and cost
         {
-            out << it->first << "(";       // dest_node
-            out << it->second << ") ";     // cost
+            out << data.nodes[src][dst].first << "(";       // dest_node
+            out << data.nodes[src][dst].second << ") ";     // cost
         }
         out << endl;
     }
@@ -191,9 +193,9 @@ void Graph::delete_edge_uni(node src, node dst)
 //Sets the value associated to the unidirection edge (src,dst) to cost. Helper for set_edge_value method.
 void Graph::set_edge_value_uni(node src, node dst, cost_type cost)
 {
-    for (edge_iterator it = nodes[src].begin(); it != nodes[src].end(); ++it)
-        if (it->first == dst)       // dest_node
-            it->second = cost;      // cost
+    for (size_t i = 0; i < nodes[src].size(); ++i)
+        if (nodes[src][i].first == dst)     // dest_node
+            nodes[src][i].second = cost;  // cost
 }
 
 // Produces a random cost
