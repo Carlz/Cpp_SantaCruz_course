@@ -64,7 +64,7 @@ bool Graph::adjacent(node src, node dst) const
 }
 
 // Lists all nodes dst such that there is an edge from src to dst.
-vector<edge_data> Graph::neighbours(node src) const
+vector<edge_data> Graph::neighbors(node src) const
 {
     assert(static_cast<size_t>(src) < nodes.size());   // check if node is within graph's range
   

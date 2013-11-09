@@ -21,7 +21,7 @@ using namespace std;
 
 class PriorityQueue {
 public:
-    PriorityQueue(int debug_lvl) : debug_lvl(debug_lvl) {}  // Simple constructor
+    PriorityQueue(int debug_lvl = 0) : debug_lvl(debug_lvl) {}  // Simple constructor
     virtual ~PriorityQueue();             // Destructor to delete dynamically allocated Path objects.
     
     void chg_prioirity(Path& new_prio);   // changes the priority (node value) of queue element.

@@ -30,7 +30,7 @@ using namespace std;
 ///         [5]     Maximum edge cost
 /// \return         Exit code, 0 upon success
 ///
-int main(int argc, char *argv[])
+int main_short(int argc, char *argv[])
 {
     MonteCarloSimulator monte_carlo;
     

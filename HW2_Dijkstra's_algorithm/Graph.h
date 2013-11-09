@@ -27,7 +27,7 @@ public:
     int     node_cnt() const { return nodes.size();}                  // Returns the number of nodes in the graph.
     int     edge_cnt() const;                                         // Returns the number of edges in the graph.
     bool    adjacent(node src, node dst) const ;    // Tests whether there is an edge from node src to node dst.
-    vector<edge_data> neighbours(node src) const;   // Lists all nodes dst such that there is an edge from src to dst.
+    vector<edge_data> neighbors(node src) const;   // Lists all nodes dst such that there is an edge from src to dst.
     void    add_edge(node src, node dst, cost_type cost); // Adds the edge from src to dst with cost, if it is not there.
     void    delete_edge(node src, node dst);        // Removes the edge from src to dst, if it is there.
     cost_type get_node_value(node src) const;       // Returns the value associated with the node src.
