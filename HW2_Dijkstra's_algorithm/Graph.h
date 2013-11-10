@@ -19,8 +19,11 @@ using namespace std;
 
 class Graph {
 public:
-    Graph(int nd_cnt = 0) { if (nd_cnt > 0) nodes.resize(nd_cnt);}    // Initialize Graph with nd_cnt nodes.
-    
+    Graph(size_t nd_cnt = 0);                                         // Initialize Graph with nd_cnt nodes.
+    Graph(size_t nd_cnt, float density, cost_type cost_low, cost_type cost_high) // Initializae Graph with a random structure
+        { this->randomize(nd_cnt, density, cost_low, cost_high);}
+    Graph(string in_file);                                            // Initialize Graph with external input file
+           
     void    randomize(unsigned int nd_cnt = 0, float density = 0,     // Generate a random graph structure base on
                       cost_type cost_low = 1.0, cost_type cost_high = 10.0);  // node count, edge density and cost.
     void    destroy();                                                // Clear all graph structure    

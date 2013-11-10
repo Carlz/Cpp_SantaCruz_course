@@ -14,10 +14,17 @@
 #include "PriorityQueue.h"
 
 // Destructor to delete dynamically allocated Path objects.
-PriorityQueue::~PriorityQueue() {
+PriorityQueue::~PriorityQueue()
+{
+    if (debug_lvl > 2)
+        cout << "Destroy PriorityQueue\n";
     for (size_t i = 0; i < path_list.size(); ++i)
         if (path_list[i] != NULL)
+        {
+            if (debug_lvl > 4)
+                cout <<  "Destroy: " << *(path_list[i]);
             delete path_list[i];
+        }
 }
 
 // Changes the priority (path and cost) of queue element (destination).

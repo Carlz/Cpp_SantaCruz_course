@@ -19,15 +19,16 @@ class MinSpanningTree {
 public:
     MinSpanningTree(int debug_lvl = 0): debug_lvl(debug_lvl) {}    
    
-    bool find_prim_tree(Graph& base_graph); // find minimum spanning tree in base_graph using Prim's algorithm
-                                            // returns true on success, false on fail
-    size_t get_size() const {return min_tree.size();}  // tree node size for last minimum spanning tree found.
-//  cost_type get_cost() const {return min_tree.get_cost();}  // return the minimum spanning tree cost from the last found
-    PriorityQueue get_tree() const {return min_tree;}         // return the path nodes associated with last shortest path found.
+    bool find_prim_tree(Graph& base_graph);             // Searches for the minimum spanning tree in base_graph using Prim's algorithm
+                                                        // ... and returns true on success, false on fail
+    size_t get_size() const {return min_tree.size();}   // Returns the size in number of edges of the last minimum spanning tree found.
+    cost_type get_cost() const;                         // Returns the cost of the last minimum spanning tree found.
+    vector<Path> get_tree() const {return min_tree;}    // Returns the edges of the last minimum spanning tree found.
+    void print_tree() const;                            // Prints the last minimum spanning tree found.
 
 private:
-    PriorityQueue min_tree;    // Last minimum spanning tree found
-    int  debug_lvl;            // Object debug level
+    vector<Path> min_tree;                              // Last minimum spanning tree found
+    int  debug_lvl;                                     // Object debug level
 };
 
 #endif  /* MINSPANNINGTREE_H */

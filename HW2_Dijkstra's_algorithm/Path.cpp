@@ -21,12 +21,12 @@ void Path::add_node(node new_node, float edge_cost)
 // Prints Path structure on the screen
 ostream& operator<<(ostream& out, const Path& data)
 {
-    ios_base::fmtflags flags = out.flags( );    // Save old output stream flags
-    out << fixed << setprecision(2);            // Configure floating point displays
+    ios_base::fmtflags flags = out.flags( );          // Save old output stream flags
+    out << fixed << setprecision(2);                  // Configure floating point displays
     
     out << "Path: ";
-    for (size_t i = 0; i < data.get_path().size(); ++i)
-        out << data.get_path().at(i) << " ";
+    for (size_t i = 0; i < data.get_size(); ++i)
+        out << setw(4) << data.get_path().at(i) << " ";
     out << " -  Cost: " << data.get_cost() << endl;
     
     out.flags(flags);  // Set the output flags to the way they were

@@ -49,7 +49,7 @@ private:
     private:
         bool reverse;
     };
-    
+
     vector<Path*> path_queue;       // Queue of Paths organized as a Min Heap
     vector<Path*> path_list;        // List of Paths for direct random acess
     int debug_lvl;                  // Object debug level

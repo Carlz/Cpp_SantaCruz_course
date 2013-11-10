@@ -9,12 +9,54 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include <iomanip>
+#include <fstream>
 #include <assert.h>
 #include "Graph.h"
 
 //-----------------
 // Public methods
 //-----------------
+
+// Initialize Graph with nd_cnt nodes.
+Graph::Graph(size_t nd_cnt)
+{
+    if (nd_cnt > 0)
+    {
+        nodes.resize(nd_cnt);
+        node_values.resize(nd_cnt);
+    }
+}    
+
+// Initialize Graph with external input file
+Graph::Graph(string in_file)
+{
+    ifstream ifp(in_file, ios::in);     // open input file
+    if (ifp.is_open())
+    {
+        size_t node_cnt = 0;
+        node src, dst;
+        cost_type cost;
+        
+        if (!ifp.eof())                 // Read node count in the first line
+            ifp >> node_cnt;            // and resize graph accordingly
+        if (node_cnt > 0) 
+        {
+            nodes.resize(node_cnt);
+            node_values.resize(node_cnt);
+        }
+        else
+            return;
+        
+        while(!ifp.eof())               // Read next lines to get edges:
+        {                               // source  destination  edge_cost
+            ifp >> src;                 // and add them into the graph
+            ifp >> dst;
+            ifp >> cost;
+            this->add_edge(src, dst, cost);
+        }
+        ifp.close();
+    }
+}
 
 // Generate a random graph structure based on node count, edge density and edge cost range
 void Graph::randomize(unsigned int node_cnt, float density, cost_type cost_low, cost_type cost_high)
