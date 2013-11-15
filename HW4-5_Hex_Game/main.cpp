@@ -15,10 +15,14 @@ using namespace std;
  * 
  */
 int main(int argc, char** argv) {
-
-    Graph g;
     
-    HexBoard b(3);
+    HexBoard b(8);
+    
+    b.set_pos_value(3,5,RED_SPOT);
+    b.set_pos_value(6,0,BLUE_SPOT);
+    b.set_pos_value(1,3,RED_SPOT);
+    b.set_pos_value(7,2,BLUE_SPOT);
+    b.set_pos_value(4,7,RED_SPOT);
     
     cout << b;
     

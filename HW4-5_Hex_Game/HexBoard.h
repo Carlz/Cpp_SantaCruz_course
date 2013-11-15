@@ -21,6 +21,13 @@ public:
     HexBoard(const HexBoard& orig);
     virtual ~HexBoard();
     
+    // Get the character representing the occupation of a given position
+    char get_pos_token(unsigned column, unsigned line) const;
+    
+    // Set the value representing the occupation of a given position
+    void set_pos_value(unsigned column, unsigned line, cost_type val)
+        { bgraph.set_node_value(column + line*bsize, val);}
+    
     // Prints HexBoard structure on the screen    
     friend  ostream& operator<<(ostream& out, const HexBoard& board);
     

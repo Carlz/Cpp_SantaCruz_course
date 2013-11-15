@@ -30,8 +30,6 @@ HexBoard::HexBoard(unsigned size)
             
         bgraph.set_node_value(n, EMPTY_SPACE);            // Initialize node with empy space
     }
-    
-    cout << bgraph;
 }
 
 HexBoard::HexBoard(const HexBoard& orig) {
@@ -40,14 +38,58 @@ HexBoard::HexBoard(const HexBoard& orig) {
 HexBoard::~HexBoard() {
 }
 
+char HexBoard::get_pos_token(unsigned column, unsigned line) const
+{
+    cost_type pos_val = bgraph.get_node_value(column + line*bsize);
+    if (pos_val == RED_SPOT)
+        return 'O';
+    if (pos_val == BLUE_SPOT)
+        return 'X';
+    // Else its an Empty spot
+    return '.';
+}
 
 // Prints HexBoard structure on the screen    
 ostream& operator<<(ostream& out, const HexBoard& board)
-{
-    char column = 'A';
+{   
+    // Print top line with letters for columns designation 
     out << endl << "  ";
+    char column = 'A';
     for (unsigned c = 0; c < board.bsize; ++c)
-        out << itoa(column + c) << "   ";
+        out << column++ << "   ";
+    out << endl;
+    
+    // Print playable lines
+    for (unsigned line = 0; line < board.bsize; ++line)
+    {
+        // Print position tokens
+        out << string(2*line, ' ') << line+1 << " ";
+        for (unsigned c = 0; c < board.bsize; ++c)
+        {
+            out << board.get_pos_token(c, line);
+            if (c < board.bsize - 1)
+                out << " - ";
+        }
+        // Blue side marker
+        if ( line == board.bsize/2 - 1)
+            out << "    BLUE";
+        out << endl;
+        
+        // Print additional node links if its not the last line
+        if (line < board.bsize - 1)
+        {
+            out << string(3+2*line, ' ');
+            for (unsigned c = 0; c < board.bsize; ++c)
+            {
+                out << "\\ ";
+                if (c < board.bsize - 1)
+                    out << "/ ";
+            }
+        }
+        out << endl;
+    }
+    // Red side marker
+    out << string(4*board.bsize-3, ' ') << "RED";
     return out;
 }
 
