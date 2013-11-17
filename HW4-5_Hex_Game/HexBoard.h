@@ -16,7 +16,7 @@ using namespace std;
 #ifndef HEXBOARD_H
 #define	HEXBOARD_H
 
-enum HexSpot {EMPTY = 0, BLUE = 1, RED = 2};
+enum HexSpot {EMPTY = 0, BLUE = 1, RED = 2, WIN = 3};
 
 class HexBoard {
 public:

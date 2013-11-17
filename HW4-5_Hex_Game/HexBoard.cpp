@@ -68,6 +68,8 @@ char HexBoard::get_pos_token(unsigned column, unsigned line) const
         return 'X';
     if (pos_val == HexSpot::RED)
         return 'O';
+    if (pos_val == HexSpot::WIN)
+        return '@';    
     // Else its an Empty spot
     return '.';
 }
@@ -86,13 +88,19 @@ bool HexBoard::set_pos_value(unsigned column, unsigned line, HexSpot val)
 
 // Verify if the player has completed its path, winning the game
 bool HexBoard::verify_winner(HexSpot player)
-{ 
+{
+    bool ended = false;
     if (player == BLUE)
-        return search_algo.find_path(bgraph, VIRTUAL_WEST, VIRTUAL_EAST, player);
+        ended = search_algo.find_path(bgraph, VIRTUAL_WEST, VIRTUAL_EAST, player);
     else if (player == RED)
-        return search_algo.find_path(bgraph, VIRTUAL_NORTH, VIRTUAL_SOUTH, player);
-    else
-        return false;
+        ended = search_algo.find_path(bgraph, VIRTUAL_NORTH, VIRTUAL_SOUTH, player);
+    // Check if game is ended to mark the winning path        
+    if (ended)                                                  
+    {
+        for (node win_node : search_algo.get_path().get_path())
+            bgraph.set_node_value(win_node, WIN);
+    }
+    return ended;
 }
 
 // Prints HexBoard structure on the screen    

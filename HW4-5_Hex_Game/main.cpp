@@ -49,7 +49,7 @@ int main(int argc, char** argv) {
         }
         cout << endl << "After move " << move << endl;   // When game has ended, print the winner
         game.print_board();
-        cout << "> The " << game.get_player_name(player) << " player won! Congratulations!" << endl;
+        cout << "> " << game.get_player_name(player) << " player wins! Congratulations! The winning path is marked with: @" << endl;
         if (!game.play_again())                          // Check if one wants to play it again
             break;
     }
