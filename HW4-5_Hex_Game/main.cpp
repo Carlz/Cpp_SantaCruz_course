@@ -1,11 +1,14 @@
 ////////////////////////////////////////////////////////////////////////////////
-/// \brief      Hex Game main
+/// \brief      Hex Game main - Home Work #4
 /// \author     Carlos Sampaio
 /// \file       main.cpp
 /// \date       15/11/2013
 ///
 ///     Hex Game implementation. http://en.wikipedia.org/wiki/Hex_%28board_game%29
 ///     Currently supports only 2 human players.
+///     The end of game verification is done by checking the existence of a path
+///     between two virtual nodes connected to the edges of the board. This is
+///     done using Djikstra's algorithm.
 ///
 ////////////////////////////////////////////////////////////////////////////////
 
