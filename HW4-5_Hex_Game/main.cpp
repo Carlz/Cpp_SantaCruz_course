@@ -8,6 +8,7 @@
 #include <cstdlib>
 #include "Graph.h"
 #include "HexBoard.h"
+#include "HexGame.h"
 
 using namespace std;
 
@@ -16,15 +17,19 @@ using namespace std;
  */
 int main(int argc, char** argv) {
     
-    HexBoard b(8);
-    
-    b.set_pos_value(3,5,RED_SPOT);
-    b.set_pos_value(6,0,BLUE_SPOT);
-    b.set_pos_value(1,3,RED_SPOT);
-    b.set_pos_value(7,2,BLUE_SPOT);
-    b.set_pos_value(4,7,RED_SPOT);
-    
-    cout << b;
+    HexGame game;
+    game.greetings();
+    for (;;)
+    {
+        game.start_game();
+        for (int i = 0; i < 3; ++i)
+        {
+            game.print_board();
+            game.get_human_play(BLUE);
+            game.print_board();
+            game.get_human_play(RED);
+        }
+    }
     
     return 0;
 }

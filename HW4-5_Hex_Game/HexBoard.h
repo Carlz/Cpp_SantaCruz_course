@@ -11,13 +11,16 @@ using namespace std;
 #ifndef HEXBOARD_H
 #define	HEXBOARD_H
 
-const cost_type EMPTY_SPACE = 0.0;
-const cost_type RED_SPOT    = 1.0;
-const cost_type BLUE_SPOT   = 2.0;
+//const cost_type EMPTY_SPOT = 0.0;
+//const cost_type BLUE_SPOT  = 1.0;
+//const cost_type RED_SPOT   = 2.0;
+
+enum HexSpot {EMPTY = 0, BLUE = 1, RED = 2};
 
 class HexBoard {
 public:
-    HexBoard(unsigned size = 7);
+    HexBoard() {}
+    HexBoard(unsigned size);
     HexBoard(const HexBoard& orig);
     virtual ~HexBoard();
     
@@ -25,14 +28,17 @@ public:
     char get_pos_token(unsigned column, unsigned line) const;
     
     // Set the value representing the occupation of a given position
-    void set_pos_value(unsigned column, unsigned line, cost_type val)
-        { bgraph.set_node_value(column + line*bsize, val);}
+    HexSpot get_pos_value(unsigned column, unsigned line) const
+        { return bgraph.get_node_value(column + line*bsize);}
+    
+    // Set the value representing the occupation of a given position
+    bool set_pos_value(unsigned column, unsigned line, HexSpot val);
     
     // Prints HexBoard structure on the screen    
     friend  ostream& operator<<(ostream& out, const HexBoard& board);
     
 private:
-    Graph bgraph;       // Board Graph
+    Graph<HexSpot, unsigned> bgraph;       // Board Graph
     unsigned bsize;     // Board Size (one dimension)
 
 };
