@@ -1,44 +1,66 @@
-/* 
- * File:   HexBoard.cpp
- * Author: Capacitare
- * 
- * Created on November 15, 2013, 11:29 AM
- */
+////////////////////////////////////////////////////////////////////////////////
+/// \brief      Hex Board class implementation
+/// \author     Carlos Sampaio
+/// \file       HexBoard.h
+/// \date       15/11/2013
+///
+///     Hex Board class implements a Graph to represent the playable board.
+///     It controls the moves on the board.
+///
+////////////////////////////////////////////////////////////////////////////////
 
 #include <cstdlib>
 #include <iomanip>
 #include "HexBoard.h"
 
+//Board constructor with a variable size
 HexBoard::HexBoard(unsigned size)
 {
+    const unsigned FIXED_COST = 1;
     bsize = size;
-    bgraph = Graph<HexSpot, unsigned>(bsize*bsize);
-    const unsigned fixed_cost = 1;
+    bgraph = Graph<HexSpot, unsigned>(bsize*bsize + 4);  // Regular board spaces plus 4 virtual nodes for winner calculation
+    VIRTUAL_WEST  = bsize*bsize;
+    VIRTUAL_EAST  = bsize*bsize + 1;
+    VIRTUAL_NORTH = bsize*bsize + 2;
+    VIRTUAL_SOUTH = bsize*bsize + 3;
+    
     for (node n = 0; n < bsize*bsize; ++n)
     {
         unsigned column_index = n%bsize;
         unsigned line_index   = n/bsize;
+
+        if (column_index == 0)                            // if node is in the left edge of the board
+            bgraph.add_edge(n, VIRTUAL_WEST, FIXED_COST); // ... make a connection to the WEST virtual node
         
         if (column_index < bsize-1)                       // if node is not in the right edge of the board
-            bgraph.add_edge(n, n+1, fixed_cost);          // ... make a connection to its east neighbor
+            bgraph.add_edge(n, n+1, FIXED_COST);          // ... make a connection to its east neighbor
+        
+        if (column_index == bsize-1)                      // if node is in the right edge of the board
+            bgraph.add_edge(n, VIRTUAL_EAST, FIXED_COST); // ... make a connection to the EAST virtual node
 
+        if (line_index == 0)                              // if node is in the top edge of the board
+            bgraph.add_edge(n, VIRTUAL_NORTH, FIXED_COST);// ... make a connection to the NORTH virtual node
+        
         if (line_index < bsize-1)                         // if node is not in the bottom line of the board
         {
-            bgraph.add_edge(n, n+bsize, fixed_cost);      // ... make a connection to its south neighbor
+            bgraph.add_edge(n, n+bsize, FIXED_COST);      // ... make a connection to its south neighbor
             if (column_index > 0)                         // and if its not in the left edge of the board
-                bgraph.add_edge(n, n+bsize-1, fixed_cost);// ... make a connection to its SW neighbor
+                bgraph.add_edge(n, n+bsize-1, FIXED_COST);// ... make a connection to its SW neighbor
         }
+        
+        if (line_index == bsize-1)                        // if node is in the bottom edge of the board
+            bgraph.add_edge(n, VIRTUAL_SOUTH, FIXED_COST);// ... make a connection to the SOUTH virtual node
             
-        bgraph.set_node_value(n, HexSpot::EMPTY);                  // Initialize node with empty space
+        bgraph.set_node_value(n, HexSpot::EMPTY);         // Initialize node with empty space
     }
+    // Set right colors for virtual nodes
+    bgraph.set_node_value(VIRTUAL_WEST, HexSpot::BLUE);
+    bgraph.set_node_value(VIRTUAL_EAST, HexSpot::BLUE);
+    bgraph.set_node_value(VIRTUAL_NORTH, HexSpot::RED);
+    bgraph.set_node_value(VIRTUAL_SOUTH, HexSpot::RED);
 }
 
-HexBoard::HexBoard(const HexBoard& orig) {
-}
-
-HexBoard::~HexBoard() {
-}
-
+// Get the character representing the occupation of a given position
 char HexBoard::get_pos_token(unsigned column, unsigned line) const
 {
     HexSpot pos_val = this->get_pos_value(column, line);
@@ -58,6 +80,17 @@ bool HexBoard::set_pos_value(unsigned column, unsigned line, HexSpot val)
         bgraph.set_node_value(column + line*bsize, val);
         return true;
     }
+    else
+        return false;
+}
+
+// Verify if the player has completed its path, winning the game
+bool HexBoard::verify_winner(HexSpot player)
+{ 
+    if (player == BLUE)
+        return search_algo.find_path(bgraph, VIRTUAL_WEST, VIRTUAL_EAST, player);
+    else if (player == RED)
+        return search_algo.find_path(bgraph, VIRTUAL_NORTH, VIRTUAL_SOUTH, player);
     else
         return false;
 }

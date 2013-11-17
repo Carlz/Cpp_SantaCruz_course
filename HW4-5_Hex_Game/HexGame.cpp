@@ -1,47 +1,45 @@
-/* 
- * File:   HexGame.cpp
- * Author: hp
- * 
- * Created on 16 de Novembro de 2013, 19:04
- */
+////////////////////////////////////////////////////////////////////////////////
+/// \brief      Hex Game class implementation
+/// \author     Carlos Sampaio
+/// \file       HexGame.cpp
+/// \date       16/11/2013
+///
+///     Hex Game class implements the control structures for the game play.
+///
+////////////////////////////////////////////////////////////////////////////////
 
 #include <limits>
 #include "HexGame.h"
 
-HexGame::HexGame() {
-}
-
-HexGame::HexGame(const HexGame& orig) {
-}
-
-HexGame::~HexGame() {
-}
-
-
+// Get user inputs to initialize the game board and start the game
 void HexGame::start_game()
 {
     unsigned nplayer, bsize;
     
-    // Get the number of players input
-    for (;;)
+    // Get the number of players input 
+    if (false)  // enable when computer AI is implemented
     {
-        cout << endl << "Enter the number of human players (0,1,2): ";
-        if (cin >> nplayer) 
+        for (;;)
         {
-            if ((nplayer >= 0) && (nplayer <= 2))
-                break;  // valid value
+            cout << endl << "Enter the number of human players (0,1,2): ";
+            if (cin >> nplayer) 
+            {
+                if ((nplayer >= 0) && (nplayer <= 2))
+                    break;  // valid value
+                else
+                    cout << "Invalid number of human players: " << nplayer << endl;
+            }
             else
-                cout << "Invalid number of human players: " << nplayer << endl;
+            {
+                cout << "Please enter a valid integer." << endl;
+                cin.clear();
+                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+            }
         }
-        else
-        {
-            cout << "Please enter a valid integer." << endl;
-            cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
-        }
+        cout << endl << "Number of human players: " << nplayer << endl;
+        cout << "Number of computer players: " << 2 - nplayer << endl;
+        human_player = nplayer;
     }
-    cout << endl << "Number of human players: " << nplayer << endl;
-    cout << "Number of computer players: " << 2 - nplayer << endl;
     
     // Get the board size input
     for (;;)
@@ -66,14 +64,15 @@ void HexGame::start_game()
     board_size = bsize;
 }
 
-void HexGame::get_human_play(HexSpot color)
+// Get the user play input and checks for a winner, if game has ended return true, else false.
+bool HexGame::get_human_play(HexSpot color)
 {
     char column;
     unsigned col_index, line;
     
     for (;;)
     {
-        cout << endl << "Player " << player_string.at(static_cast<int>(color)) << " - enter coordinate (column and line): ";
+        cout << endl << "> " << PLAYER_LABEL.at(color) << " player, enter a coordinate (column and line): ";
         // Getting column
         if (cin >> column) 
         {
@@ -97,11 +96,13 @@ void HexGame::get_human_play(HexSpot color)
         // Getting line number
         if (cin >> line)
         {
+            // Verify range validity
             if ((line >= 1) && (line <= board_size))
             {
+                // Verify if move can be placed
                 if (board.set_pos_value(col_index, line-1, color))
                 {
-                    break;      // valid input
+                    break;      // valid input, go check for winner
                 }
                 else
                 {
@@ -127,4 +128,32 @@ void HexGame::get_human_play(HexSpot color)
             continue;
         }        
     } // end for
+    
+    // Verify if the play has win the game
+    return board.verify_winner(color);
+}
+
+// Get the user input if a new game should be started
+bool HexGame::play_again()
+{
+    char cont;
+    for (;;)
+    {
+        cout << endl << "Do you want to play again (Y or N)? ";
+        if (cin >> cont)
+        {
+            if (toupper(cont) == 'N')
+                return false;
+            else if (toupper(cont) == 'Y')
+                return true;
+            else
+                cout << "Please enter a valid answer." << endl;
+        }
+        else
+        {
+            cout << "Please enter a valid answer." << endl;
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        }
+    }
 }

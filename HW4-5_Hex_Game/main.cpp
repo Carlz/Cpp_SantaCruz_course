@@ -1,34 +1,54 @@
-/* 
- * File:   main.cpp
- * Author: Capacitare
- *
- * Created on November 15, 2013, 11:11 AM
- */
+////////////////////////////////////////////////////////////////////////////////
+/// \brief      Hex Game main
+/// \author     Carlos Sampaio
+/// \file       main.cpp
+/// \date       15/11/2013
+///
+///     Hex Game implementation. http://en.wikipedia.org/wiki/Hex_%28board_game%29
+///     Currently supports only 2 human players.
+///
+////////////////////////////////////////////////////////////////////////////////
 
-#include <cstdlib>
-#include "Graph.h"
-#include "HexBoard.h"
 #include "HexGame.h"
-
 using namespace std;
 
-/*
- * 
- */
+// Implements the flow control of the game
 int main(int argc, char** argv) {
     
-    HexGame game;
-    game.greetings();
-    for (;;)
+    HexGame game;               // Game control
+    HexSpot player;             // Current player
+    unsigned move;              // Current move
+    
+    game.greetings();           // Print greetings message
+    for (;;)                    // Loop for various matches
     {
-        game.start_game();
-        for (int i = 0; i < 3; ++i)
+        player = BLUE;          // Start with BLUE player
+        move = 0;
+        game.start_game();      // Get the number of players and board size
+        for (;;)                // Loop for various moves
         {
-            game.print_board();
-            game.get_human_play(BLUE);
-            game.print_board();
-            game.get_human_play(RED);
+            if (move == 0)      // Print Move number
+            {
+                cout << "No moves" << endl;
+                move++;
+            }
+            else
+            {
+                cout << endl << "After move " << move++ << endl;
+            }
+            game.print_board();                 // Print current board
+            if (game.get_human_play(player))    // Get human play and check if game is ended
+                break;
+            if (player == BLUE)                 // Change players
+                player = RED;
+            else
+                player = BLUE;
         }
+        cout << endl << "After move " << move << endl;   // When game has ended, print the winner
+        game.print_board();
+        cout << "> The " << game.get_player_name(player) << " player won! Congratulations!" << endl;
+        if (!game.play_again())                          // Check if one wants to play it again
+            break;
     }
     
     return 0;
