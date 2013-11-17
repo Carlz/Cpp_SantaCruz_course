@@ -253,10 +253,10 @@ ostream& operator<<(ostream& out, const Graph<NV, EV>& data)
 
     out << "Number of nodes: " << data.node_cnt() << endl;
     out << "Number of edges: " << data.edge_cnt() << endl;
-    out << "Source\tDestination(cost)" << endl;
+    out << "Source(value)\tDestination(cost)" << endl;
     for (node src = 0; src < data.nodes.size(); ++src)              // Go through all nodes
     {
-        out << src << "\t";                                         // for edge print destination and cost
+        out << src << " (" << data.node_values[src] << ")\t\t";      // for edge print destination and cost
         for (edge_const_iterator it = data.nodes[src].begin(); it != data.nodes[src].end(); ++it)
         {
             out << it->first << "(";       // dest_node
