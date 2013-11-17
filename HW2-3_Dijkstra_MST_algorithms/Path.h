@@ -28,7 +28,7 @@ public:
     void    add_node(node new_node, float edge_cost);           // Add node in the end of the path
     vector<node> get_path() const {return node_list; }          // Get path node list
     size_t  get_size() const { return node_list.size(); }       // Get path size in number of nodes
-    float   get_cost() const {return cost; }                    // Get path cost
+    cost_type get_cost() const {return cost; }                  // Get path cost
     friend ostream& operator<<(ostream& out, const Path& data); // Prints Path structure on the screen
     
 private:    
