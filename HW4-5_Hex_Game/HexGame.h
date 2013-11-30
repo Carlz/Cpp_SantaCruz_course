@@ -8,6 +8,7 @@
 ///
 ////////////////////////////////////////////////////////////////////////////////
 
+#include <list>
 #include "HexBoard.h"
 using namespace std;
 
@@ -34,6 +35,9 @@ public:
     // Get the user play input and checks for a winner, if game has ended return true, else false.
     bool get_human_play(HexSpot color);
     
+    // Calculate the next computer play
+    bool get_computer_play(HexSpot color);
+    
     // Return player name
     string get_player_name(HexSpot color)
         { return PLAYER_LABEL[color];}
@@ -46,8 +50,12 @@ private:
     const unsigned HEX_VERSION_MINOR = 0;     // Game minor version
     const vector<string> PLAYER_LABEL = {"NONE", "BLUE", "RED"}; // Player names
     HexBoard board;                           // Board object
+    HexBoard aux_board;                       // Auxiliary board to calculate computer plays
     unsigned board_size;                      // Size of one dimension of the board
     unsigned human_player;                    // Number of human players
+    list<unsigned> free_places;
+    
+    void remove_place(unsigned col, unsigned line);
 
 };
 

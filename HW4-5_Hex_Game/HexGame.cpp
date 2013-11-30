@@ -61,7 +61,10 @@ void HexGame::start_game()
     }
     cout << endl;
     board = HexBoard(bsize);
+    aux_board = HexBoard(bsize);
     board_size = bsize;
+    for (unsigned pos = 0; pos < bsize*bsize; ++pos)
+        free_places.push_back(pos);
 }
 
 // Get the user play input and checks for a winner, if game has ended return true, else false.
@@ -102,6 +105,7 @@ bool HexGame::get_human_play(HexSpot color)
                 // Verify if move can be placed
                 if (board.set_pos_value(col_index, line-1, color))
                 {
+                    this->remove_place(col_index, line-1);
                     break;      // valid input, go check for winner
                 }
                 else
@@ -154,6 +158,27 @@ bool HexGame::play_again()
             cout << "Please enter a valid answer." << endl;
             cin.clear();
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        }
+    }
+}
+
+// Calculate next computer play
+bool HexGame::get_computer_play(HexSpot color)
+{
+    vector<int>
+    aux_board.copy_board(board);
+}
+
+
+void HexGame::remove_place(unsigned col, unsigned line)
+{
+    unsigned pos = line*board_size + col;
+    for (auto it = free_places.begin(); it != free_places.end(); ++it)
+    {
+        if (*it == pos)
+        {
+            free_places.erase(it);
+            break;
         }
     }
 }

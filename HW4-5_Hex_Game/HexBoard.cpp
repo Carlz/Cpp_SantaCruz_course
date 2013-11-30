@@ -103,6 +103,15 @@ bool HexBoard::verify_winner(HexSpot player)
     return ended;
 }
 
+// Copies the players positions from a reference board
+void HexBoard::copy_board(HexBoard& ref)
+{
+    for (node pos = 0; pos < bsize*bsize; ++pos)
+    {
+        bgraph.set_node_value(pos, ref.bgraph.get_node_value(pos));
+    }
+}
+
 // Prints HexBoard structure on the screen    
 ostream& operator<<(ostream& out, const HexBoard& board)
 {   

@@ -38,6 +38,9 @@ public:
     // Verify if the player has completed its path, winning the game
     bool verify_winner(HexSpot player);
     
+    // Copies the players positions from a reference board
+    void copy_board(HexBoard& ref);
+    
     // Prints HexBoard structure on the screen    
     friend  ostream& operator<<(ostream& out, const HexBoard& board);
     
