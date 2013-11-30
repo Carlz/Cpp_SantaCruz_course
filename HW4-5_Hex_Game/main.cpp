@@ -40,12 +40,18 @@ int main(int argc, char** argv) {
                 cout << endl << "After move " << move++ << endl;
             }
             game.print_board();                 // Print current board
-            if (game.get_human_play(player))    // Get human play and check if game is ended
-                break;
             if (player == BLUE)                 // Change players
+            {
+                if (game.get_human_play(player))    // Get human play and check if game is ended
+                   break;
                 player = RED;
+            }
             else
+            {
+                if (game.get_computer_play(player))
+                    break;
                 player = BLUE;
+            }
         }
         cout << endl << "After move " << move << endl;   // When game has ended, print the winner
         game.print_board();

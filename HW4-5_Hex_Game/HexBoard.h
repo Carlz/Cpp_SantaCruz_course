@@ -9,6 +9,8 @@
 ///
 ////////////////////////////////////////////////////////////////////////////////
 
+#include <cstdlib>
+#include <utility>
 #include "Graph.h"
 #include "ShortestPath.h"
 using namespace std;
@@ -17,6 +19,9 @@ using namespace std;
 #define	HEXBOARD_H
 
 enum HexSpot {EMPTY = 0, BLUE = 1, RED = 2, WIN = 3};
+typedef pair<unsigned, unsigned> PosCoord;
+
+class HexGame;
 
 class HexBoard {
 public:
@@ -41,6 +46,14 @@ public:
     // Copies the players positions from a reference board
     void copy_board(HexBoard& ref);
     
+    PosCoord random_free_space();
+//    list<PosCoord>* get_free_spaces()
+//        { return &free_spaces;}
+    
+//    vector<PosCoord>
+    
+    friend class HexGame;
+    
     // Prints HexBoard structure on the screen    
     friend  ostream& operator<<(ostream& out, const HexBoard& board);
     
@@ -48,12 +61,15 @@ private:
     unsigned bsize;                              // Board Size (one dimension)
     Graph<HexSpot, unsigned> bgraph;             // Board Graph
     ShortestPath<HexSpot, unsigned> search_algo; // Algorithm to find connection between board edges
+    list<PosCoord> free_spaces;                  // Empty spaces on the board, in board graph index values
     
     // Virtual nodes for winner calculation
     node VIRTUAL_WEST;
     node VIRTUAL_EAST;
     node VIRTUAL_NORTH;
     node VIRTUAL_SOUTH;
+    
+    void fill_space(unsigned col, unsigned line);   // Mark a board hexagon as occupied    
 };
 
 #endif	/* HEXBOARD_H */

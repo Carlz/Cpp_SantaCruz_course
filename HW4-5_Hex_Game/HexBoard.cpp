@@ -11,6 +11,7 @@
 
 #include <cstdlib>
 #include <iomanip>
+#include <list>
 #include "HexBoard.h"
 
 //Board constructor with a variable size
@@ -19,6 +20,7 @@ HexBoard::HexBoard(unsigned size)
     const unsigned FIXED_COST = 1;
     bsize = size;
     bgraph = Graph<HexSpot, unsigned>(bsize*bsize + 4);  // Regular board spaces plus 4 virtual nodes for winner calculation
+    free_spaces = list<PosCoord>();                      //Initialize free spaces list
     VIRTUAL_WEST  = bsize*bsize;
     VIRTUAL_EAST  = bsize*bsize + 1;
     VIRTUAL_NORTH = bsize*bsize + 2;
@@ -52,6 +54,7 @@ HexBoard::HexBoard(unsigned size)
             bgraph.add_edge(n, VIRTUAL_SOUTH, FIXED_COST);// ... make a connection to the SOUTH virtual node
             
         bgraph.set_node_value(n, HexSpot::EMPTY);         // Initialize node with empty space
+        free_spaces.push_back(PosCoord(column_index, line_index));  // Set node into the free spaces list
     }
     // Set right colors for virtual nodes
     bgraph.set_node_value(VIRTUAL_WEST, HexSpot::BLUE);
@@ -80,6 +83,7 @@ bool HexBoard::set_pos_value(unsigned column, unsigned line, HexSpot val)
     if (this->get_pos_value(column, line) == HexSpot::EMPTY)
     {
         bgraph.set_node_value(column + line*bsize, val);
+        this->fill_space(column, line);
         return true;
     }
     else
@@ -106,11 +110,22 @@ bool HexBoard::verify_winner(HexSpot player)
 // Copies the players positions from a reference board
 void HexBoard::copy_board(HexBoard& ref)
 {
-    for (node pos = 0; pos < bsize*bsize; ++pos)
+    for (node pos = 0; pos < bsize*bsize + 4; ++pos)
     {
         bgraph.set_node_value(pos, ref.bgraph.get_node_value(pos));
     }
+    this->free_spaces = ref.free_spaces;
 }
+
+
+PosCoord HexBoard::random_free_space()
+{
+    int offset = rand() % free_spaces.size();
+    list<PosCoord>::iterator it = free_spaces.begin();
+    advance(it, offset);
+    return *it;
+}
+
 
 // Prints HexBoard structure on the screen    
 ostream& operator<<(ostream& out, const HexBoard& board)
@@ -169,5 +184,23 @@ ostream& operator<<(ostream& out, const HexBoard& board)
     out << string(4*board.bsize-2, ' ') << "RED (O)" << endl << endl;
     
     return out;
+}
+
+
+//--------------------
+// Private functions
+//--------------------
+
+// Mark a board hexagon as occupied
+void HexBoard::fill_space(unsigned col, unsigned line)
+{
+    for (auto it = free_spaces.begin(); it != free_spaces.end(); ++it)
+    {
+        if (it->first == col && it->second == line)
+        {
+            free_spaces.erase(it);
+            break;
+        }
+    }
 }
 

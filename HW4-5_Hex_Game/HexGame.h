@@ -9,6 +9,7 @@
 ////////////////////////////////////////////////////////////////////////////////
 
 #include <list>
+#include <vector>
 #include "HexBoard.h"
 using namespace std;
 
@@ -47,16 +48,14 @@ public:
     
 private:
     const unsigned HEX_VERSION_MAJOR = 1;     // Game major version
-    const unsigned HEX_VERSION_MINOR = 0;     // Game minor version
+    const unsigned HEX_VERSION_MINOR = 1;     // Game minor version
+    const unsigned MC_TRIALS = 500;    
     const vector<string> PLAYER_LABEL = {"NONE", "BLUE", "RED"}; // Player names
     HexBoard board;                           // Board object
     HexBoard aux_board;                       // Auxiliary board to calculate computer plays
     unsigned board_size;                      // Size of one dimension of the board
     unsigned human_player;                    // Number of human players
-    list<unsigned> free_places;
     
-    void remove_place(unsigned col, unsigned line);
-
 };
 
 #endif	/* HEXGAME_H */

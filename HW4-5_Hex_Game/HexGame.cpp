@@ -63,8 +63,6 @@ void HexGame::start_game()
     board = HexBoard(bsize);
     aux_board = HexBoard(bsize);
     board_size = bsize;
-    for (unsigned pos = 0; pos < bsize*bsize; ++pos)
-        free_places.push_back(pos);
 }
 
 // Get the user play input and checks for a winner, if game has ended return true, else false.
@@ -105,7 +103,6 @@ bool HexGame::get_human_play(HexSpot color)
                 // Verify if move can be placed
                 if (board.set_pos_value(col_index, line-1, color))
                 {
-                    this->remove_place(col_index, line-1);
                     break;      // valid input, go check for winner
                 }
                 else
@@ -165,20 +162,40 @@ bool HexGame::play_again()
 // Calculate next computer play
 bool HexGame::get_computer_play(HexSpot color)
 {
-    vector<int>
-    aux_board.copy_board(board);
-}
-
-
-void HexGame::remove_place(unsigned col, unsigned line)
-{
-    unsigned pos = line*board_size + col;
-    for (auto it = free_places.begin(); it != free_places.end(); ++it)
+    size_t possible_moves = board.free_spaces.size();
+    PosCoord rnd_move;
+    vector<int> move_win_cnt(possible_moves, 0);
+    HexSpot player;
+    int move_id = 0, best_move_id = 0, best_move_cnt = 0;
+    for (auto it = board.free_spaces.begin(); it != board.free_spaces.end(); ++it, ++move_id)
     {
-        if (*it == pos)
+        for (unsigned  run = 0; run < MC_TRIALS; ++run)
         {
-            free_places.erase(it);
-            break;
+            aux_board.copy_board(board);
+            aux_board.set_pos_value(it->first, it->second, color);      // Set move that is being tested
+            player = color;
+            for (size_t i = 1; i < possible_moves; ++i)
+            {
+                player = (player == BLUE ? RED : BLUE);
+                rnd_move = aux_board.random_free_space();
+                aux_board.set_pos_value(rnd_move.first, rnd_move.second, player);
+            }
+            if (aux_board.verify_winner(color))
+                ++move_win_cnt[move_id];
+//            cout << aux_board;
         }
+        if (move_win_cnt[move_id] > best_move_cnt)
+        {
+            best_move_cnt = move_win_cnt[move_id];
+            best_move_id = move_id;
+        }
+//        cout << move_id << ": " << move_win_cnt[move_id] << endl;
     }
+
+    auto pos_it = board.free_spaces.begin();
+    advance(pos_it, best_move_id);              // treat case when bes_move_cnt is 0 = never wins
+    board.set_pos_value(pos_it->first, pos_it->second, color);
+    
+    // Verify if the play has win the game
+    return board.verify_winner(color);    
 }
