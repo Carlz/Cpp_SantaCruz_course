@@ -61,7 +61,11 @@ bool ShortestPath<NodeValue, EdgeValue>::find_path_base(Graph<NodeValue, EdgeVal
     if ((base_graph.get_node_value(src) != val) || (base_graph.get_node_value(dst) != val))
     {
         if (debug_lvl > 0)
+        {
             cout << "Source or Destination does not have the right value." << endl;
+            cout << "Source: " << base_graph.get_node_value(src) << endl;
+            cout << "Destination: " << base_graph.get_node_value(dst) << endl;
+        }
         this->short_path = Path();
         return false;
     }
