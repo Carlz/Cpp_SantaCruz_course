@@ -8,6 +8,7 @@
 ///
 ////////////////////////////////////////////////////////////////////////////////
 
+#include <cstdlib>
 #include <limits>
 #include "HexGame.h"
 
@@ -17,28 +18,50 @@ void HexGame::start_game()
     unsigned nplayer, bsize;
     
     // Get the number of players input 
-    if (false)  // enable when computer AI is implemented
+    for (;;)
     {
-        for (;;)
+        cout << endl << "Enter the number of human players (0,1,2): ";
+        if (cin >> nplayer) 
         {
-            cout << endl << "Enter the number of human players (0,1,2): ";
-            if (cin >> nplayer) 
+            if ((nplayer >= 0) && (nplayer <= 2))
+                break;  // valid value
+            else
+                cout << "Invalid number of human players: " << nplayer << endl;
+        }
+        else
+        {
+            cout << "Please enter a valid integer." << endl;
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        }
+    }
+    cout << endl << "Number of human players: " << nplayer << endl;
+    cout << "Number of computer players: " << 2 - nplayer << endl;
+    
+    // Define players and order
+    players = vector<HexPlayer>(3);
+    switch (nplayer)
+    {
+        case 0:
+            players[BLUE] = COMPUTER;
+            players[RED] = COMPUTER;
+            break;
+        case 1:
+            if (make_yn_question("Do you want to play first (Y or N)? "))
             {
-                if ((nplayer >= 0) && (nplayer <= 2))
-                    break;  // valid value
-                else
-                    cout << "Invalid number of human players: " << nplayer << endl;
+                players[BLUE] = HUMAN;
+                players[RED] = COMPUTER;
             }
             else
             {
-                cout << "Please enter a valid integer." << endl;
-                cin.clear();
-                cin.ignore(numeric_limits<streamsize>::max(), '\n');
+                players[BLUE] = COMPUTER;
+                players[RED] = HUMAN;
             }
-        }
-        cout << endl << "Number of human players: " << nplayer << endl;
-        cout << "Number of computer players: " << 2 - nplayer << endl;
-        human_player = nplayer;
+            break;
+        default:
+            players[BLUE] = HUMAN;
+            players[RED] = HUMAN;
+            break;            
     }
     
     // Get the board size input
@@ -73,7 +96,7 @@ bool HexGame::get_human_play(HexSpot color)
     
     for (;;)
     {
-        cout << endl << "> " << PLAYER_LABEL.at(color) << " player, enter a coordinate (column and line): ";
+        cout << endl << "> " << PLAYER_LABEL.at(color) << " player (human), enter a coordinate (column and line): ";
         // Getting column
         if (cin >> column) 
         {
@@ -103,6 +126,8 @@ bool HexGame::get_human_play(HexSpot color)
                 // Verify if move can be placed
                 if (board.set_pos_value(col_index, line-1, color))
                 {
+                    cin.clear(); // Clear buffer to prevent repeated moves
+                    cin.ignore(numeric_limits<streamsize>::max(), '\n');
                     break;      // valid input, go check for winner
                 }
                 else
@@ -134,34 +159,11 @@ bool HexGame::get_human_play(HexSpot color)
     return board.verify_winner(color);
 }
 
-// Get the user input if a new game should be started
-bool HexGame::play_again()
-{
-    char cont;
-    for (;;)
-    {
-        cout << endl << "Do you want to play again (Y or N)? ";
-        if (cin >> cont)
-        {
-            if (toupper(cont) == 'N')
-                return false;
-            else if (toupper(cont) == 'Y')
-                return true;
-            else
-                cout << "Please enter a valid answer." << endl;
-        }
-        else
-        {
-            cout << "Please enter a valid answer." << endl;
-            cin.clear();
-            cin.ignore(numeric_limits<streamsize>::max(), '\n');
-        }
-    }
-}
-
 // Calculate next computer play
 bool HexGame::get_computer_play(HexSpot color)
 {
+    cout << endl << "> " << PLAYER_LABEL.at(color) << " player (computer) is evaluating the next move... " << endl;
+
     size_t possible_moves = board.free_spaces.size();
     PosCoord rnd_move;
     vector<int> move_win_cnt(possible_moves, 0);
@@ -193,9 +195,53 @@ bool HexGame::get_computer_play(HexSpot color)
     }
 
     auto pos_it = board.free_spaces.begin();
-    advance(pos_it, best_move_id);              // treat case when bes_move_cnt is 0 = never wins
+    advance(pos_it, best_move_id);              
+    if (best_move_cnt == 0)           // treat case when bes_move_cnt is 0
+        cout << "No winning condition!" << endl;
     board.set_pos_value(pos_it->first, pos_it->second, color);
+    cout << endl << "> " << PLAYER_LABEL.at(color) << " player (computer) plays at coordinate: ";
+    cout << static_cast<char>('A' + pos_it->first) << pos_it->second + 1 << endl;
     
     // Verify if the play has win the game
     return board.verify_winner(color);    
+}
+
+// Calculate next computer play
+bool HexGame::get_next_move(HexSpot color)
+{
+   if (players[color] == HUMAN)
+       return get_human_play(color);
+   else
+       return get_computer_play(color);
+}
+
+// Get the user input for a yes or no question
+bool HexGame::make_yn_question(string question)
+{
+    char cont;
+    for (;;)
+    {
+        cout << endl << question;
+        if (cin >> cont)
+        {
+            if (toupper(cont) == 'N')
+                return false;
+            else if (toupper(cont) == 'Y')
+                return true;
+            else
+                cout << "Please enter a valid answer." << endl;
+        }
+        else
+        {
+            cout << "Please enter a valid answer." << endl;
+            cin.clear();
+            cin.ignore(numeric_limits<streamsize>::max(), '\n');
+        }
+    }
+}
+
+// Get the user input if a new game should be started
+bool HexGame::play_again()
+{
+    return make_yn_question("Do you want to play again (Y or N)? ");
 }

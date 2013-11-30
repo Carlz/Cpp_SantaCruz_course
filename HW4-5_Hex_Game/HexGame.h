@@ -10,6 +10,7 @@
 
 #include <list>
 #include <vector>
+#include <utility>
 #include "HexBoard.h"
 using namespace std;
 
@@ -33,6 +34,9 @@ public:
     void print_board()
         { cout << board;}
     
+    // Get next player move
+    bool get_next_move(HexSpot color);
+    
     // Get the user play input and checks for a winner, if game has ended return true, else false.
     bool get_human_play(HexSpot color);
     
@@ -51,10 +55,14 @@ private:
     const unsigned HEX_VERSION_MINOR = 1;     // Game minor version
     const unsigned MC_TRIALS = 500;    
     const vector<string> PLAYER_LABEL = {"NONE", "BLUE", "RED"}; // Player names
+    enum HexPlayer { HUMAN, COMPUTER };
     HexBoard board;                           // Board object
     HexBoard aux_board;                       // Auxiliary board to calculate computer plays
     unsigned board_size;                      // Size of one dimension of the board
-    unsigned human_player;                    // Number of human players
+    vector<HexPlayer> players;
+    
+    // Get the user input for a yes or no question
+    bool make_yn_question(string question);
     
 };
 
