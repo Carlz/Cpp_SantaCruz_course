@@ -10,7 +10,6 @@
 
 
 #include <vector>
-#include <deque>
 #include "Graph_pkg.h"
 #include "Graph.h"
 #include "Path.h"
