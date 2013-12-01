@@ -12,6 +12,7 @@
 #include <cstdlib>
 #include <utility>
 #include <random>
+#include <list>
 #include "Graph.h"
 #include "ShortestPath.h"
 using namespace std;

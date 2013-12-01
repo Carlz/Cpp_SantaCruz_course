@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-/// \brief      Hex Game main - Home Work #4
+/// \brief      Hex Game main - Home Work #4 and #5
 /// \author     Carlos Sampaio
 /// \file       main.cpp
 /// \date       15/11/2013

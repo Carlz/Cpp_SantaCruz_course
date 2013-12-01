@@ -11,7 +11,6 @@
 
 #include <cstdlib>
 #include <iomanip>
-#include <list>
 #include <chrono>
 #include "HexBoard.h"
 
