@@ -24,8 +24,7 @@ public:
     virtual ~HexGame() {}
     
     // Print Hex Game greetings message
-    void greetings()
-        { cout << "Welcome to Hex Game v" << HEX_VERSION_MAJOR << "." << HEX_VERSION_MINOR << " !" << endl;}
+    void greetings();
     
     // Get user inputs to initialize the game board and start the game
     void start_game();

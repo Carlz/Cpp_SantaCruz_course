@@ -5,15 +5,14 @@
 /// \date       15/11/2013
 ///
 ///     Hex Game implementation. http://en.wikipedia.org/wiki/Hex_%28board_game%29
-///     Currently supports only 2 human players.
+///     Supports human and computer players.
+///     The computer AI is implemented with a Monte Carlo decision system.
 ///     The end of game verification is done by checking the existence of a path
 ///     between two virtual nodes connected to the edges of the board. This is
 ///     done using Djikstra's algorithm.
 ///
 ////////////////////////////////////////////////////////////////////////////////
 
-#include <cstdlib>
-#include <ctime>
 #include "HexGame.h"
 using namespace std;
 
@@ -27,8 +26,6 @@ int main(int argc, char** argv) {
     HexGame game(trials);       // Game control
     HexSpot player;             // Current player
     unsigned move;              // Current move
-    
-    srand(time(0));
     
     game.greetings();           // Print greetings message
     for (;;)                    // Loop for various matches
@@ -47,10 +44,10 @@ int main(int argc, char** argv) {
             {
                 cout << endl << "After move " << move++ << endl;
             }
-            game.print_board();                 // Print current board
-            if (game.get_next_move(player))     // Get next move and check if game is ended
-                break;                          // Break if game is over
-            player = (player == BLUE ? RED : BLUE);
+            game.print_board();                         // Print current board
+            if (game.get_next_move(player))             // Get next move and check if game is ended
+                break;                                  // Break if game is over
+            player = (player == BLUE ? RED : BLUE);     // Switch players
         }
         cout << endl << "After move " << move << endl;   // When game has ended, print the winner
         game.print_board();

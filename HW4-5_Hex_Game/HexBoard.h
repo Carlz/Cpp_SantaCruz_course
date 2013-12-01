@@ -11,6 +11,7 @@
 
 #include <cstdlib>
 #include <utility>
+#include <random>
 #include "Graph.h"
 #include "ShortestPath.h"
 using namespace std;
@@ -59,6 +60,7 @@ private:
     Graph<HexSpot, unsigned> bgraph;             // Board Graph
     ShortestPath<HexSpot, unsigned> search_algo; // Algorithm to find connection between board edges
     list<PosCoord> free_spaces;                  // Empty spaces on the board, in board graph index values
+    std::default_random_engine rand_generator;   // C++11 Random number generator
     
     // Virtual nodes for winner calculation
     node VIRTUAL_WEST;

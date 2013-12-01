@@ -12,6 +12,7 @@
 #include <cstdlib>
 #include <iomanip>
 #include <list>
+#include <chrono>
 #include "HexBoard.h"
 
 //Board constructor with a variable size
@@ -61,6 +62,10 @@ HexBoard::HexBoard(unsigned size)
     bgraph.set_node_value(VIRTUAL_EAST, HexSpot::BLUE);
     bgraph.set_node_value(VIRTUAL_NORTH, HexSpot::RED);
     bgraph.set_node_value(VIRTUAL_SOUTH, HexSpot::RED);
+    
+    // obtain a seed from the system clock for the random number generator
+    unsigned seed1 = std::chrono::system_clock::now().time_since_epoch().count();
+    rand_generator = std::default_random_engine(seed1);
 }
 
 // Get the character representing the occupation of a given position
@@ -120,7 +125,8 @@ void HexBoard::copy_board(HexBoard& ref)
 // Selects a random free space on the board
 PosCoord HexBoard::random_free_space()
 {
-    int offset = rand() % free_spaces.size();
+    std::uniform_int_distribution<int> distribution(0, free_spaces.size() - 1);
+    int offset = distribution(rand_generator);
     list<PosCoord>::iterator it = free_spaces.begin();
     advance(it, offset);
     return *it;

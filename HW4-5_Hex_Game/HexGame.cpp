@@ -5,12 +5,27 @@
 /// \date       16/11/2013
 ///
 ///     Hex Game class implements the control structures for the game play.
+///     Based on http://en.wikipedia.org/wiki/Hex_%28board_game%29
 ///
 ////////////////////////////////////////////////////////////////////////////////
 
 #include <cstdlib>
 #include <limits>
 #include "HexGame.h"
+
+
+// Print Hex Game greetings message
+void HexGame::greetings()
+{
+    cout << "Welcome to Hex Game v" << HEX_VERSION_MAJOR << "." << HEX_VERSION_MINOR << " !" << endl << endl
+         << "This game is based on a 2 players board game called Hex. Each player has an allocated color, BLUE (X) and RED (O)." << endl
+         << "Players take turns placing a stone of their color on a single free spot (.) within the overall playing board." << endl
+         << "The goal for each player is to form a connected path of their own stones linking the opposing sides of the board" << endl
+         << "marked by their colors. The first player to complete his or her connection wins the game." << endl
+         << "A valid path is formed by stones connected by the dashes on the board and do not need to be a straight line." << endl << endl
+         << "The BLUE (X) player connects from EAST to WEST and plays first, while the RED (O) player connects from NORTH to SOUTH." << endl;
+
+}
 
 // Get user inputs to initialize the game board and start the game
 void HexGame::start_game()
@@ -164,9 +179,9 @@ bool HexGame::get_computer_play(HexSpot color)
 {
     cout << endl << "> " << PLAYER_LABEL.at(color) << " player (computer) is evaluating the next move... " << endl;
 
-    size_t possible_moves = board.free_spaces.size();
+    size_t possible_moves = board.free_spaces.size();   // Get number of valid moves
     PosCoord rnd_move;
-    vector<int> move_win_cnt(possible_moves, 0);
+    vector<int> move_win_cnt(possible_moves, 0);        // Initialize vector to accumulate number of wins for each move
     HexSpot player;
     int move_id = 0, best_move_id = 0, best_move_cnt = 0;
     for (auto it = board.free_spaces.begin(); it != board.free_spaces.end(); ++it, ++move_id)
@@ -184,14 +199,12 @@ bool HexGame::get_computer_play(HexSpot color)
             }
             if (aux_board.verify_winner(color))
                 ++move_win_cnt[move_id];
-//            cout << aux_board;
         }
         if (move_win_cnt[move_id] > best_move_cnt)
         {
             best_move_cnt = move_win_cnt[move_id];
             best_move_id = move_id;
         }
-//        cout << move_id << ": " << move_win_cnt[move_id] << endl;
     }
 
     auto pos_it = board.free_spaces.begin();
