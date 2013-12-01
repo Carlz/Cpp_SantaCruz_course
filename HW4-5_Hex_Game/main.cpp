@@ -12,15 +12,23 @@
 ///
 ////////////////////////////////////////////////////////////////////////////////
 
+#include <cstdlib>
+#include <ctime>
 #include "HexGame.h"
 using namespace std;
 
 // Implements the flow control of the game
 int main(int argc, char** argv) {
     
-    HexGame game;               // Game control
+    unsigned trials = 1000;
+    if (argc > 1)
+        trials = atoi(argv[1]);
+
+    HexGame game(trials);       // Game control
     HexSpot player;             // Current player
     unsigned move;              // Current move
+    
+    srand(time(0));
     
     game.greetings();           // Print greetings message
     for (;;)                    // Loop for various matches

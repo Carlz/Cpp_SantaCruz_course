@@ -19,7 +19,7 @@ using namespace std;
 
 class HexGame {
 public:
-    HexGame() {}
+    HexGame(unsigned trials = 1000): mc_trials(trials) {}
     HexGame(const HexGame& orig) {}
     virtual ~HexGame() {}
     
@@ -53,13 +53,13 @@ public:
 private:
     const unsigned HEX_VERSION_MAJOR = 1;     // Game major version
     const unsigned HEX_VERSION_MINOR = 1;     // Game minor version
-    const unsigned MC_TRIALS = 500;    
     const vector<string> PLAYER_LABEL = {"NONE", "BLUE", "RED"}; // Player names
-    enum HexPlayer { HUMAN, COMPUTER };
+    enum HexPlayer { HUMAN, COMPUTER };       // Player types
     HexBoard board;                           // Board object
     HexBoard aux_board;                       // Auxiliary board to calculate computer plays
     unsigned board_size;                      // Size of one dimension of the board
-    vector<HexPlayer> players;
+    unsigned mc_trials;                       // Number of Monte Carlo trials for each position
+    vector<HexPlayer> players;                // Define BLUE and RED players type
     
     // Get the user input for a yes or no question
     bool make_yn_question(string question);

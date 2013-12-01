@@ -47,7 +47,7 @@ void HexGame::start_game()
             players[RED] = COMPUTER;
             break;
         case 1:
-            if (make_yn_question("Do you want to play first (Y or N)? "))
+            if (make_yn_question("Do you want to be the BLUE player and play first (Y or N)? "))
             {
                 players[BLUE] = HUMAN;
                 players[RED] = COMPUTER;
@@ -171,7 +171,7 @@ bool HexGame::get_computer_play(HexSpot color)
     int move_id = 0, best_move_id = 0, best_move_cnt = 0;
     for (auto it = board.free_spaces.begin(); it != board.free_spaces.end(); ++it, ++move_id)
     {
-        for (unsigned  run = 0; run < MC_TRIALS; ++run)
+        for (unsigned  run = 0; run < mc_trials; ++run)
         {
             aux_board.copy_board(board);
             aux_board.set_pos_value(it->first, it->second, color);      // Set move that is being tested

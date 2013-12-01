@@ -117,7 +117,7 @@ void HexBoard::copy_board(HexBoard& ref)
     this->free_spaces = ref.free_spaces;
 }
 
-
+// Selects a random free space on the board
 PosCoord HexBoard::random_free_space()
 {
     int offset = rand() % free_spaces.size();

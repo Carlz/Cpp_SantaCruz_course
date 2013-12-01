@@ -45,13 +45,10 @@ public:
     
     // Copies the players positions from a reference board
     void copy_board(HexBoard& ref);
-    
+
+    // Selects a random free space on the board
     PosCoord random_free_space();
-//    list<PosCoord>* get_free_spaces()
-//        { return &free_spaces;}
-    
-//    vector<PosCoord>
-    
+  
     friend class HexGame;
     
     // Prints HexBoard structure on the screen    
