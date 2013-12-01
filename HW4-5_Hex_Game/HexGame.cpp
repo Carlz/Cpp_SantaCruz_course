@@ -53,7 +53,7 @@ void HexGame::start_game()
     cout << endl << "Number of human players: " << nplayer << endl;
     cout << "Number of computer players: " << 2 - nplayer << endl;
     
-    // Define players and order
+    // Define players and their order
     players = vector<HexPlayer>(3);
     switch (nplayer)
     {
@@ -179,39 +179,46 @@ bool HexGame::get_computer_play(HexSpot color)
 {
     cout << endl << "> " << PLAYER_LABEL.at(color) << " player (computer) is evaluating the next move... " << endl;
 
-    size_t possible_moves = board.free_spaces.size();   // Get number of valid moves
-    PosCoord rnd_move;
-    vector<int> move_win_cnt(possible_moves, 0);        // Initialize vector to accumulate number of wins for each move
     HexSpot player;
-    int move_id = 0, best_move_id = 0, best_move_cnt = 0;
+    PosCoord rnd_move;
+    size_t possible_moves = board.free_spaces.size();       // Get number of valid moves
+    vector<int> move_score(possible_moves, 0);              // Initialize vector to accumulate number of wins for each move
+    int move_id = 0, best_move_id = 0, best_move_score = 0; // Initialize move decision variables
+    
+    // Iterate over possible moves running a Monte Carlo simulation for each of them. Finally chooses move with best score.
     for (auto it = board.free_spaces.begin(); it != board.free_spaces.end(); ++it, ++move_id)
     {
-        for (unsigned  run = 0; run < mc_trials; ++run)
+        for (unsigned  run = 0; run < mc_trials; ++run)                 // Run configurable number of Monte Carlo trials
         {
-            aux_board.copy_board(board);
-            aux_board.set_pos_value(it->first, it->second, color);      // Set move that is being tested
+            aux_board.copy_board(board);                                // Copy game board to a auxiliary one
+            aux_board.set_pos_value(it->first, it->second, color);      // Make move that is being tested on the aux board
             player = color;
-            for (size_t i = 1; i < possible_moves; ++i)
+            for (size_t i = 1; i < possible_moves; ++i)                 // Fill all other free spaces with random moves
             {
-                player = (player == BLUE ? RED : BLUE);
+                player = (player == BLUE ? RED : BLUE);                 
                 rnd_move = aux_board.random_free_space();
                 aux_board.set_pos_value(rnd_move.first, rnd_move.second, player);
             }
-            if (aux_board.verify_winner(color))
-                ++move_win_cnt[move_id];
+            if (aux_board.verify_winner(color))                         // Check if computer player has won to increment move score
+                ++move_score[move_id];
         }
-        if (move_win_cnt[move_id] > best_move_cnt)
-        {
-            best_move_cnt = move_win_cnt[move_id];
+        if (move_score[move_id] > best_move_score)                      // After Monte Carlo trials, check if this move is the best
+        {                                                               // move up to now. Update best move if it is a better one.
+            best_move_score = move_score[move_id];
             best_move_id = move_id;
         }
     }
 
-    auto pos_it = board.free_spaces.begin();
-    advance(pos_it, best_move_id);              
-    if (best_move_cnt == 0)           // treat case when bes_move_cnt is 0
+    // Inform if there was no winning move. This should not happen.
+    if (best_move_score == 0)
         cout << "No winning condition!" << endl;
+    
+    // Make the selected best move in the real game board
+    auto pos_it = board.free_spaces.begin();                            
+    advance(pos_it, best_move_id);              
     board.set_pos_value(pos_it->first, pos_it->second, color);
+    
+    // Inform the computer move
     cout << endl << "> " << PLAYER_LABEL.at(color) << " player (computer) plays at coordinate: ";
     cout << static_cast<char>('A' + pos_it->first) << pos_it->second + 1 << endl;
     
@@ -227,6 +234,18 @@ bool HexGame::get_next_move(HexSpot color)
    else
        return get_computer_play(color);
 }
+
+
+// Get the user input if a new game should be started
+bool HexGame::play_again()
+{
+    return make_yn_question("Do you want to play again (Y or N)? ");
+}
+
+
+//----------------------
+// Private functions
+//----------------------
 
 // Get the user input for a yes or no question
 bool HexGame::make_yn_question(string question)
@@ -251,10 +270,4 @@ bool HexGame::make_yn_question(string question)
             cin.ignore(numeric_limits<streamsize>::max(), '\n');
         }
     }
-}
-
-// Get the user input if a new game should be started
-bool HexGame::play_again()
-{
-    return make_yn_question("Do you want to play again (Y or N)? ");
 }

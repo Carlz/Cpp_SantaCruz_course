@@ -16,7 +16,12 @@
 #include "HexGame.h"
 using namespace std;
 
-// Implements the flow control of the game
+/// \brief  Main function. Implements the flow control of the game.
+/// \param  argc    Number of command line arguments
+/// \param  argv    Array of command line arguments
+///         [1]     effort: number of trials used to evaluate next compute move (default: 1000)
+/// \return         Exit code, 0 upon success
+///
 int main(int argc, char** argv) {
     
     unsigned trials = 1000;
